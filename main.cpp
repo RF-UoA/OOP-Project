@@ -12,7 +12,51 @@
 
 using namespace std;
 
+// Draw to window function
+void draw_window(sf::RenderWindow* window, sf::Sprite* sprite) {
+
+    window->clear();
+    window->draw(*sprite);
+    window->display();
+
+}
+
+// main function
 int main(void) {
+
+    // variables for display window size
+    float windowHeight = 1080;
+    float windowWidth = 1920;
+
+    // Create display window object
+    static sf::RenderWindow window(sf::VideoMode(windowWidth,windowHeight), "Tower defense");
+
+    sf::Texture texture;
+    if (!texture.loadFromFile("images/Slime.png")) {
+        cout << "Error loading texture" << endl;
+        return 0;
+    }
+
+    sf::Sprite sprite; 
+    sprite.setTexture(texture);
+
+    // main game loop
+    while (window.isOpen()) {
+
+        // create event object
+        sf::Event event;
+
+        // check if window is closed
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        
+        // draw all game objects to the window
+        draw_window(&window, &sprite);
+        
+    }
 
     // level number = 0
     // player money = 100
