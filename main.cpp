@@ -25,8 +25,8 @@ void draw_window(sf::RenderWindow* window, sf::Sprite* sprite) {
 int main(void) {
 
     // variables for display window size
-    float windowHeight = 1080;
-    float windowWidth = 1920;
+    float windowHeight = 100;
+    float windowWidth = 100;
 
     // Create display window object
     static sf::RenderWindow window(sf::VideoMode(windowWidth,windowHeight), "Tower defense");
