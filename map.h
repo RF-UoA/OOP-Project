@@ -3,6 +3,7 @@
 
 #include "gameObject.h"
 #include "tower.h"
+#include "enemy.h"
 
 // SFML modules and libraries
 #include <SFML/Graphics.hpp>
@@ -11,10 +12,15 @@
 
 class map {
     protected:
-        sf::Sprite** all_objects;
-        sf::Sprite** towers;
-        sf::Sprite** paths;
-        sf::Sprite** groud;
+        int total_num;
+        int num_towers;
+        int num_enemies;
+        int num_paths;
+        gameObject** all_objects;
+        tower** towers;
+        gameObject** paths;
+        enemy** enemies;
+        gameObject** groud;
 
     public:
         map();
@@ -23,6 +29,7 @@ class map {
         void remove_enemy(enemy* enemy);
         void towers_attack();
         void generate_path();
+        void move_enemies();
 
 };
 

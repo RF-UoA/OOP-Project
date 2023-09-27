@@ -39,9 +39,9 @@ tower::tower(sf::Texture texture, std::string name, float x, float y) {
 
 // attack is a virtual function and will apply to towers individually
 
-void tower::attack(enemy** enemy, int num_enemies) {
+void tower::attack(enemy** enemies, int num_enemies) {
 
     for (int i=0; i<num_enemies; i++) {
-        enemy[i]->take_damage(0);
+        enemies[i]->take_damage(0);
     }
 }
