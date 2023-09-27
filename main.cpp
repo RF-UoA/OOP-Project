@@ -8,7 +8,10 @@
 #include <SFML/Window.hpp>
 
 // Class files
-
+#include "gameObject.h"
+#include "map.h"
+#include "tower.h"
+#include "enemy.h"
 
 using namespace std;
 
