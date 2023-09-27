@@ -25,8 +25,8 @@ void draw_window(sf::RenderWindow* window, sf::Sprite* sprite) {
 int main(void) {
 
     // variables for display window size
-    float windowHeight = 100;
-    float windowWidth = 100;
+    float windowHeight = 1000;
+    float windowWidth = 1000;
 
     // Create display window object
     static sf::RenderWindow window(sf::VideoMode(windowWidth,windowHeight), "Tower defense");
@@ -51,6 +51,9 @@ int main(void) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            sprite.move(sf::Vector2f(0.1, 0.1));
         }
         
         // draw all game objects to the window
