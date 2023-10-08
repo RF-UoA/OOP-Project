@@ -30,6 +30,14 @@ tower::tower(sf::Texture texture, std::string name, float x, float y) {
     this->texture = texture;
     sf::Sprite sprite;
     sprite.setTexture(this->texture);
+    sf::Vector2f desiredSize(80.0f, 80.0f); // Replace with your desired size
+
+    // Calculate the scaling factors
+    float scaleX = desiredSize.x / this->texture.getSize().x;
+    float scaleY = desiredSize.y / this->texture.getSize().y;
+
+    // Set the scale of the sprite to achieve the desired size in pixels
+    sprite.scale(sf::Vector2f(scaleX, scaleY));
     this->object = sprite;
     this->pos.x = x;
     this->pos.y = y;

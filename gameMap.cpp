@@ -15,30 +15,32 @@ gameMap::gameMap() {
 }
 
 void gameMap::add_tower(tower* new_tower) {
+
+    this->towers.push_back(new_tower);
     
     // create a temporary array that is 1 unit longer than towers array
-    tower** temp = new tower*[this->num_towers+1];
+    // tower** temp = new tower*[this->num_towers+1];
 
-    // copy contents of old tower array to temp
-    for (int i=0; i<this->num_towers-1; i++) {
-        temp[i] = this->towers[i];
-    }
+    // // copy contents of old tower array to temp
+    // for (int i=0; i<this->num_towers-1; i++) {
+    //     temp[i] = this->towers[i];
+    // }
 
-    // copy new tower to temp
-    temp[this->num_towers] = new_tower;
-    this->num_towers++;
+    // // copy new tower to temp
+    // temp[this->num_towers] = new_tower;
+    // this->num_towers++;
 
-    // remove old tower array and re-allocate
-    delete [] this->towers;
-    this->towers = new tower*[this->num_towers];
+    // // remove old tower array and re-allocate
+    // delete [] this->towers;
+    // this->towers = new tower*[this->num_towers];
 
-    // copy temp array to new tower array
-    for (int i=0; i<this->num_towers-1; i++) {
-        this->towers[i] = temp[i];
-    }
+    // // copy temp array to new tower array
+    // for (int i=0; i<this->num_towers-1; i++) {
+    //     this->towers[i] = temp[i];
+    // }
 
-    // delete temp array
-    delete [] temp;
+    // // delete temp array
+    // delete [] temp;
 
 }
 
@@ -47,7 +49,7 @@ void gameMap::spawn_enemy(enemy* new_enemy) {
     // this->enemies[this->num_enemies] = new_enemy;
     // this->num_enemies++;
 
-    std::cout << "enemy spawned!" << std::endl;
+    // std::cout << "enemy spawned!" << std::endl;
     this->enemies.push_back(new_enemy);
 
     // for (int i=0; i<this->enemies.size(); i++) {
@@ -79,9 +81,15 @@ int gameMap::get_num_enemies() {return this->num_enemies;}
 
 std::vector < enemy* > gameMap::get_enemies() {return this->enemies;}
 
+std::vector < tower* > gameMap::get_towers() {return this->towers;}
+
 gameMap::~gameMap() {
     
     for (int i=0; i<this->enemies.size(); i++) {
         delete enemies[i];
+    }
+
+    for (int i=0; i<this->towers.size(); i++) {
+        delete towers[i];
     }
 }

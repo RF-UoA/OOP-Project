@@ -2,6 +2,7 @@
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
+#include <cmath>
 
 // SFML modules and libraries
 #include <SFML/Graphics.hpp>
@@ -58,6 +59,8 @@ int main() {
     // map.spawn_enemy(&enemy1);
     // map.spawn_enemy(&enemy2);
 
+    // tower tower1 = tower(towerTexture, "tower1", 0,0);
+
 
     int clock = 0;
 
@@ -71,10 +74,7 @@ int main() {
 
         //segfault
         if (clock == 1000) {
-            enemy* enemy1 = new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2);
-            map.spawn_enemy(enemy1);
-
-            // map.spawn_enemy(new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
+            map.spawn_enemy(new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
         }
 
         if (clock%20 == 0) {
@@ -85,8 +85,20 @@ int main() {
 
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+            } else if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    // Set the sprite position to the mouse click location
+                    sf::Vector2f click_position;
+                    click_position.x = (std::floor(event.mouseButton.x/80))*80;
+                    click_position.y = (std::floor(event.mouseButton.y/80))*80;
+                    // tower1.set_pos(sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
+                    map.add_tower(new tower(towerTexture, "Tower1", click_position.x, click_position.y));
+                    // tower1.set_pos(click_position);
+                    
+                }
+            }
         }
 
         //clear the window
@@ -99,16 +111,19 @@ int main() {
             }
         }
 
+        for (int i=0; i<map.get_towers().size(); i++) {
+            window.draw(map.get_towers()[i]->get_object());
+        }
+
         // window.draw(enemy1.get_object());
         for (int i=0; i<map.get_enemies().size(); i++) {
             window.draw(map.get_enemies()[i]->get_object());
         }
 
+        // window.draw(tower1.get_object());
+
         window.display();
 
-        // enemy1.moveObject(sf::Vector2f(0,-1));
-
-        // map.remove_enemy(&enemy2);
     }
 
     return 0;
