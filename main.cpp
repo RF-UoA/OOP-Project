@@ -9,9 +9,10 @@
 
 // Class files
 #include "gameObject.h"
-#include "map.h"
+#include "gameMap.h"
 #include "tower.h"
 #include "enemy.h"
+#include "tile.h"
 
 using namespace std;
 
@@ -19,6 +20,8 @@ using namespace std;
 void draw_window(sf::RenderWindow* window, sf::Sprite* sprite) {
 
     window->clear();
+
+
     window->draw(*sprite);
     window->display();
 
@@ -40,8 +43,12 @@ int main(void) {
         return 0;
     }
 
+
+
     sf::Sprite sprite; 
     sprite.setTexture(texture);
+
+    gameMap map = gameMap();
 
     // main game loop
     while (window.isOpen()) {
@@ -58,17 +65,29 @@ int main(void) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             sprite.move(sf::Vector2f(0.1, 0.1));
         }
+
+        window.clear();
+
+        for (int i=0; i<2; i++) {
+            for (int j=0; j<2; j++) {
+                window.draw(map.tiles[i][j]->sprite);
+            }
+        }
+
+
+        // window.draw(*sprite);
+        window.display();
         
         // draw all game objects to the window
-        draw_window(&window, &sprite);
+        // draw_window(&window, &sprite, map);
         
     }
 
     // level number = 0
     // player money = 100
 
-    // generate map
-    // draw map
+    // generate gameMap
+    // draw gameMap
     // draw tower
     // hold game until play button is selected
 
@@ -80,9 +99,9 @@ int main(void) {
         // game loop
             // move all enemies by 1 value
             // run 'attack' method on all towers (they may only attack if enemies are in range)
-            // if player purchases a new tower, place tower on map
+            // if player purchases a new tower, place tower on gameMap
             // drawWindow function
-                // re-draw map
+                // re-draw gameMap
                 // re-draw towers
                 // draw all enemies
                 // draw all projectiles

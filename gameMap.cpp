@@ -1,22 +1,28 @@
-#include "map.h"
+#include "gameMap.h"
 #include <iostream>
 
-map::map() {
+gameMap::gameMap() {
 
     // initialise all values and arrays to default values
     // games will always start with empty arrays which will grow
+    this->num_grids = 2;
+    this->grid_length = 500;
     this->total_num = 0;
     this->num_towers = 0;
     this->num_enemies = 0;
-    this->num_paths = 0;
-    this->all_objects = new gameObject*[total_num];
-    this->enemies = new enemy*[num_enemies];
-    this->towers = new tower*[num_towers];
-    this->paths = new gameObject*[num_paths];
+    this->num_tiles = 0;
+    // this->all_objects = new gameObject*[total_num];
+    // this->enemies = new enemy*[num_enemies];
+    // this->towers = new tower*[num_towers];
+    // this->generate_path();
+    // this->tiles = new tile*[num_tiles];
+
+    this->grid_length = 2;
+    setUpTiles();
 
 }
 
-void map::add_tower(tower* new_tower) {
+void gameMap::add_tower(tower* new_tower) {
     
     // create a temporary array that is 1 unit longer than towers array
     tower** temp = new tower*[this->num_towers+1];
@@ -44,7 +50,7 @@ void map::add_tower(tower* new_tower) {
 
 }
 
-void map::spawn_enemy(enemy* new_enemy) {
+void gameMap::spawn_enemy(enemy* new_enemy) {
     
     // create a temporary array that is 1 unit longer than enemies array
     enemy** temp = new enemy*[this->num_enemies+1];
@@ -71,7 +77,7 @@ void map::spawn_enemy(enemy* new_enemy) {
     delete [] temp;
 }
 
-void map::remove_enemy(enemy* del_enemy) {
+void gameMap::remove_enemy(enemy* del_enemy) {
 
     // create new temporary array and reduce total num of enemies
     enemy** temp = new enemy*[this->num_enemies-1];
@@ -89,7 +95,7 @@ void map::remove_enemy(enemy* del_enemy) {
 
 }
 
-void map::towers_attack() {
+void gameMap::towers_attack() {
 
     // call attack function for every tower
     for (int i=0; i<this->num_towers; i++) {
@@ -98,10 +104,41 @@ void map::towers_attack() {
 
 }
 
-void map::generate_path() {
+void gameMap::generate_path() {
+
+    // sf::Texture ground;
+    // if (!ground.loadFromFile("images/ground.png")) {
+    //     std::cout << "Error loading texture" << std::endl;
+    //     return;
+    // }
+
+    // this->tiles.clear();
+    // std::vector < tile* > first_row;
+    // first_row.push_back(new tile(ground, "grid",0,0,0));
+    // first_row.push_back(new tile(ground, "grid",500,0,0));
+
+    // std::vector < tile* > second_row;
+    // second_row.push_back(new tile(ground, "grid",0,500,0));
+    // second_row.push_back(new tile(ground, "grid",500,500,0));
+
+    // tiles.push_back(first_row);
+    // tiles.push_back(second_row);
+}
+
+void gameMap::move_enemies() {
 
 }
 
-void map::move_enemies() {
+void gameMap::setUpTiles() {
+    tiles.clear();
+    std::vector<tile*>firstRow;
+    firstRow.push_back(new tile("images/ground.png",0,0,false,false));
+    firstRow.push_back(new tile("images/ground.png",500,0,false,false));
+    tiles.push_back(firstRow);
+
+    std::vector<tile*>secondRow;
+    secondRow.push_back(new tile("images/ground.png",0,500,false,false));
+    secondRow.push_back(new tile("images/ground.png",500,500,false,false));
+    tiles.push_back(secondRow);
 
 }

@@ -4,8 +4,8 @@
 enemy::enemy() {
     
     // initialise attributes for default constructor
-    this->x_pos = 0;
-    this->y_pos = 0;
+    this->pos.x = 0.0f;
+    this->pos.y = 0.0f;
     this->name = "NA";
 
     // attempt to create blank 16 x 16 texture
@@ -19,7 +19,7 @@ enemy::enemy() {
     this->texture = texture;
     sf::Sprite sprite;
     sprite.setTexture(this->texture);
-    this->object = &sprite;
+    this->object = sprite;
 
     this->health = 1;
     this->speed = 1;
@@ -33,10 +33,10 @@ enemy::enemy(sf::Texture texture, std::string name, float x, float y, int health
     this->texture = texture;
     sf::Sprite sprite;
     sprite.setTexture(this->texture);
-    this->object = &sprite;
-    this->object->setPosition(x,y);
-    this->x_pos = sprite.getPosition().x;
-    this->y_pos = sprite.getPosition().y;
+    this->object = sprite;
+    this->pos.x = x;
+    this->pos.y = y;
+    this->object.setPosition(this->pos);
     this->health = health;
     this->speed = speed;
 
