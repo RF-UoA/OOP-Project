@@ -1,6 +1,7 @@
 // Standard libraries
 #include <iostream>
 #include <math.h>
+#include <stdlib.h>
 
 // SFML modules and libraries
 #include <SFML/Graphics.hpp>
@@ -16,96 +17,99 @@
 
 using namespace std;
 
-// Draw to window function
-void draw_window(sf::RenderWindow* window, sf::Sprite* sprite) {
+int main() {
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Tower Defence");
 
-    window->clear();
+    // Define the grid parameters
+    int gridSize = 10;
+    float cellSize = 800.0f / gridSize;
 
+    // Create a 2D array of sprites for the grid
+    std::vector<std::vector<sf::Sprite>> grid(gridSize, std::vector<sf::Sprite>(gridSize));
 
-    window->draw(*sprite);
-    window->display();
-
-}
-
-// main function
-int main(void) {
-
-    // variables for display window size
-    float windowHeight = 1000;
-    float windowWidth = 1000;
-
-    // Create display window object
-    static sf::RenderWindow window(sf::VideoMode(windowWidth,windowHeight), "Tower defense");
-
-    sf::Texture texture;
-    if (!texture.loadFromFile("images/Slime.png")) {
-        cout << "Error loading texture" << endl;
-        return 0;
+    // Load a texture for the grid cells (you should have an image file)
+    sf::Texture groundTexture;
+    if (!groundTexture.loadFromFile("images/ground.png")) {
+        return 1; // Exit if the texture fails to load
     }
 
+    sf::Texture enemyTexture;
+    if (!enemyTexture.loadFromFile("images/enemy.png")) {
+        return 1;
+    }
 
+    sf::Texture towerTexture;
+    if (!towerTexture.loadFromFile("images/tower.png")) {
+        return 1;
+    }
 
-    sf::Sprite sprite; 
-    sprite.setTexture(texture);
+    // Set the texture for each sprite in the grid
+    for (int i = 0; i < gridSize; ++i) {
+        for (int j = 0; j < gridSize; ++j) {
+            grid[i][j].setTexture(groundTexture);
+            grid[i][j].setScale(cellSize / groundTexture.getSize().x, cellSize / groundTexture.getSize().y);
+            grid[i][j].setPosition(i * cellSize, j * cellSize);
+        }
+    }
 
     gameMap map = gameMap();
+    enemy enemy3 = enemy(enemyTexture, "enemy1", 100, 100, 10, 10);
+    enemy enemy2 = enemy(enemyTexture, "enemy2", 200, 200, 10, 10);
+    // map.spawn_enemy(&enemy1);
+    // map.spawn_enemy(&enemy2);
 
-    // main game loop
+
+    int clock = 0;
+
+    // game loop
     while (window.isOpen()) {
 
-        // create event object
+        clock++;
+        if (clock > 1000) {
+            clock = 0;
+        }
+
+        //segfault
+        if (clock == 1000) {
+            enemy* enemy1 = new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2);
+            map.spawn_enemy(enemy1);
+
+            // map.spawn_enemy(new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
+        }
+
+        if (clock%20 == 0) {
+            for (int i=0; i<map.get_enemies().size(); i++) {
+                map.get_enemies()[i]->moveObject(sf::Vector2f(0,map.get_enemies()[i]->get_speed()));
+            }
+        }
+
         sf::Event event;
-
-        // check if window is closed
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+            if (event.type == sf::Event::Closed)
                 window.close();
+        }
+
+        //clear the window
+        window.clear(sf::Color::White);
+
+        // Draw the grid of sprites
+        for (int i = 0; i < gridSize; ++i) {
+            for (int j = 0; j < gridSize; ++j) {
+                window.draw(grid[i][j]);
             }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            sprite.move(sf::Vector2f(0.1, 0.1));
+
+        // window.draw(enemy1.get_object());
+        for (int i=0; i<map.get_enemies().size(); i++) {
+            window.draw(map.get_enemies()[i]->get_object());
         }
 
-        window.clear();
-
-        for (int i=0; i<2; i++) {
-            for (int j=0; j<2; j++) {
-                window.draw(map.tiles[i][j]->sprite);
-            }
-        }
-
-
-        // window.draw(*sprite);
         window.display();
-        
-        // draw all game objects to the window
-        // draw_window(&window, &sprite, map);
-        
+
+        // enemy1.moveObject(sf::Vector2f(0,-1));
+
+        // map.remove_enemy(&enemy2);
     }
-
-    // level number = 0
-    // player money = 100
-
-    // generate gameMap
-    // draw gameMap
-    // draw tower
-    // hold game until play button is selected
-
-    // Level loop
-        // level number += 1
-        // add one length to path
-        // spawn enemies based on level number
-
-        // game loop
-            // move all enemies by 1 value
-            // run 'attack' method on all towers (they may only attack if enemies are in range)
-            // if player purchases a new tower, place tower on gameMap
-            // drawWindow function
-                // re-draw gameMap
-                // re-draw towers
-                // draw all enemies
-                // draw all projectiles
-        
 
     return 0;
 }

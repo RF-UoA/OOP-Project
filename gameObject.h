@@ -25,6 +25,7 @@ class gameObject {
         void set_name(std::string name);
         std::string get_name();
         sf::Sprite get_object();
+        void moveObject(sf::Vector2f movement);
 
 };
 

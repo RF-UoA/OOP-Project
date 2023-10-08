@@ -53,3 +53,5 @@ void gameObject::set_name(std::string name) {this->name = name;}
 std::string gameObject::get_name() {return this->name;}
 
 sf::Sprite gameObject::get_object() {return this->object;}
+
+void gameObject::moveObject(sf::Vector2f movement) {this->object.move(movement);}

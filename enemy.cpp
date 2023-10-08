@@ -33,6 +33,7 @@ enemy::enemy(sf::Texture texture, std::string name, float x, float y, int health
     this->texture = texture;
     sf::Sprite sprite;
     sprite.setTexture(this->texture);
+    sprite.scale(0.2,0.2);
     this->object = sprite;
     this->pos.x = x;
     this->pos.y = y;
@@ -43,3 +44,5 @@ enemy::enemy(sf::Texture texture, std::string name, float x, float y, int health
 }
 
 void enemy::take_damage(int damage) {this->health -= damage;}
+
+int enemy::get_speed() {return this->speed;}

@@ -58,6 +58,6 @@ bool tile::setUpSprite(std::string textureName) {
 
     texture.setSmooth(true);
     sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect(0,0,500,500));
+    sprite.setTextureRect(sf::IntRect(0,0,100,100));
     return true;
 }
