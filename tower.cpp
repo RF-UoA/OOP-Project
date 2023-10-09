@@ -45,35 +45,3 @@ tower::tower(sf::Texture texture, std::string name, float x, float y) {
     this->object.setPosition(this->pos);
 
 }
-
-// attack is a virtual function and will apply to towers individually
-
-void tower::attack(std::vector < enemy* > enemies) {
-
-    // method 0 (default)
-    // for (int i=0; i<enemies.size(); i++) {
-    //     enemies[i]->take_damage(1);
-    //     std::cout << this->name << " Successfully attacked an enemy!" << std::endl;
-    // }
-
-    // method 1
-    // if (enemies.size() > 0) {
-    //     enemies[0]->take_damage(1);
-    //     std::cout << this->name << " Successfully attacked an enemy! Enemy now has " << enemies[0]->get_health() << " health" << std::endl;
-    // }
-
-    // method 2
-    for (int i=0; i<enemies.size(); i++) {
-        sf::Vector2f enemy_position = enemies[i]->get_object().getPosition();
-        sf::Vector2f displacement = enemy_position - this->pos;
-        float distance = pow(pow(displacement.x,2)+pow(displacement.y,2),0.5);
-
-        float range = 300;
-
-        if (distance <= range) {
-            enemies[i]->take_damage(1);
-            std::cout << this->name << " Successfully attacked an enemy! Enemy now has " << enemies[i]->get_health() << " health" << std::endl;
-        }
-    }
-
-}

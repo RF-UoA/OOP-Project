@@ -118,7 +118,7 @@ int main() {
 
                     // If square is not occupied, place the tower
                     if (empty_square == true) {
-                        map.add_tower(new rangedTower(towerTexture, "Tower1", click_position.x, click_position.y));
+                        map.add_tower(new AOETower(towerTexture, "Tower1", click_position.x, click_position.y));
                     } else {
                         std::cout << "square already occupied" << std::endl;
                     }                 
