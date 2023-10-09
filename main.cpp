@@ -33,6 +33,9 @@ int main() {
     int pause_pos = 800/2.6 - 800/10;
     bool pause = 0;
 
+    // Define button lock
+    bool lock_input = false;
+
     //Create pause menu assets
         //Transparent Backdrop
         sf::RectangleShape transparent(sf::Vector2f(800, 800));
@@ -44,13 +47,15 @@ int main() {
         if (!pauseTexture.loadFromFile("images/Pause.jpg")) {
             return 1;
         }
+        // create a pointer to the texture
         const sf::Texture *pausePointer = &pauseTexture;
 
         // make the pause menu shape
         sf::RectangleShape backdrop(sf::Vector2f(800/2.6, 800/2));
         backdrop.setFillColor(sf::Color::White);
-        backdrop.setTexture(pausePointer);
         backdrop.setPosition((800/2) - (800/2.6)/2, 800/4);
+        // access texture pointer annd apply it to the shape
+        backdrop.setTexture(pausePointer);
 
     // Create a 2D array of sprites for the grid
     std::vector<std::vector<sf::Sprite>> grid(gridSize, std::vector<sf::Sprite>(gridSize));
@@ -248,34 +253,50 @@ int main() {
         window.display();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && (pause == false)) {
-                // send update to console for bug fixing
                 std::cout << "Paused" << std::endl;
                 // draw objects to the window
                 window.draw(transparent);
                 window.draw(backdrop);
                 window.display();
+                // pause the game
                 pause = true;
+                lock_input = true;
         }
-
         
-        while (pause == 1) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (pause == true)) {
-                    // send update to console for bug fixing
+        while (pause == true) {
+            // lock the input to prevent multiple clicks
+            while (lock_input == true) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) == false && lock_input == true) {
+                    //cout << "1" << endl;
+                    lock_input = false;
+                }
+            }
+
+            // If the user presses escape
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && (pause == true)) {
+                // lock the input until they release escape
+                lock_input = true;
+                while (lock_input == true) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) == false && lock_input == true) {
+                    // unlock input
+                    lock_input = false;
+                    }
+                }
                     std::cout << "UnPaused" << std::endl;
                     // Set pause to false
                     pause = false;
             }
-            // // check if user presses a menu button and output accordingly
-            // sf::Vector2f menu_click_position;
-            //     menu_click_position.x = (std::floor(event.mouseButton.x/80))*80;
-            //     menu_click_position.y = (std::floor(event.mouseButton.y/80))*80;
-            
-            // // ensure the x value is within the options
-            // if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
-            //     if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
-            //         pause = false;
-            //     }
-            // }
+
+            // check if user presses a menu button and output accordingly
+            sf::Vector2f menu_click_position;
+                menu_click_position.x = (std::floor(event.mouseButton.x/80))*80;
+                menu_click_position.y = (std::floor(event.mouseButton.y/80))*80;
+                // if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
+                //     if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
+                //         cout << "success" << endl;
+                //         pause = false;
+                //     }
+                // }
         }
 
     }
