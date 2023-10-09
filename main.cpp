@@ -29,6 +29,29 @@ int main() {
     int gridSize = 10;
     float cellSize = 800.0f / gridSize;
 
+    // Define pause menu position and state
+    int pause_pos = 800/2.6 - 800/10;
+    bool pause = 0;
+
+    //Create pause menu assets
+        //Transparent Backdrop
+        sf::RectangleShape transparent(sf::Vector2f(800, 800));
+        transparent.setFillColor(sf::Color(0,0,0,128));
+        transparent.setPosition(0,0);
+
+        // Load texture for pause menu
+        sf::Texture pauseTexture;
+        if (!pauseTexture.loadFromFile("images/Pause.jpg")) {
+            return 1;
+        }
+        const sf::Texture *pausePointer = &pauseTexture;
+
+        // make the pause menu shape
+        sf::RectangleShape backdrop(sf::Vector2f(800/2.6, 800/2));
+        backdrop.setFillColor(sf::Color::White);
+        backdrop.setTexture(pausePointer);
+        backdrop.setPosition((800/2) - (800/2.6)/2, 800/4);
+
     // Create a 2D array of sprites for the grid
     std::vector<std::vector<sf::Sprite>> grid(gridSize, std::vector<sf::Sprite>(gridSize));
 
@@ -223,6 +246,37 @@ int main() {
     
         // Update the window
         window.display();
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && (pause == false)) {
+                // send update to console for bug fixing
+                std::cout << "Paused" << std::endl;
+                // draw objects to the window
+                window.draw(transparent);
+                window.draw(backdrop);
+                window.display();
+                pause = true;
+        }
+
+        
+        while (pause == 1) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (pause == true)) {
+                    // send update to console for bug fixing
+                    std::cout << "UnPaused" << std::endl;
+                    // Set pause to false
+                    pause = false;
+            }
+            // // check if user presses a menu button and output accordingly
+            // sf::Vector2f menu_click_position;
+            //     menu_click_position.x = (std::floor(event.mouseButton.x/80))*80;
+            //     menu_click_position.y = (std::floor(event.mouseButton.y/80))*80;
+            
+            // // ensure the x value is within the options
+            // if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
+            //     if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
+            //         pause = false;
+            //     }
+            // }
+        }
 
     }
 
