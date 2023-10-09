@@ -5,9 +5,12 @@
 tower::tower() {
 
     // initialise attributes for default constructor
+    this->range = 0;
     this->pos.x = 0.0f;
     this->pos.y = 0.0f;
     this->name = "NA";
+    this->attacking = 0;
+    this->type = 0;
 
     // attempt to create blank 16 x 16 texture
     sf::Texture texture;
@@ -29,6 +32,8 @@ tower::tower(sf::Texture texture, std::string name, float x, float y) {
     // initialise attributes for constructor
     this->name = name;
     this->texture = texture;
+    this->attacking = 0;
+    this->type = 0;
     sf::Sprite sprite;
     sprite.setTexture(this->texture);
     sf::Vector2f desiredSize(80.0f, 80.0f); // Replace with your desired size
@@ -43,5 +48,16 @@ tower::tower(sf::Texture texture, std::string name, float x, float y) {
     this->pos.x = x;
     this->pos.y = y;
     this->object.setPosition(this->pos);
+    this->attacking = 0; // Number of frames that attack is visible for
+    this->type = 0;
+    this->range = 0;
 
 }
+
+int tower::get_type() {return this->type;}
+
+int tower::get_attacking() {return this->attacking;}
+
+void tower::set_attacking(int attacking) {this->attacking = attacking;}
+
+int tower::get_range() {return this->range;}

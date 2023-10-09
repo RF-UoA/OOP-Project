@@ -64,6 +64,9 @@ int main() {
     // Initialise the game map
     gameMap map = gameMap();
 
+    // Change this to determine which tower is placed
+    int towerSelection = 2;
+
     // Initialise the game clock
     int clock = 0;
 
@@ -118,7 +121,11 @@ int main() {
 
                     // If square is not occupied, place the tower
                     if (empty_square == true) {
-                        map.add_tower(new AOETower(towerTexture, "Tower1", click_position.x, click_position.y));
+                        if (towerSelection == 1) {
+                            map.add_tower(new rangedTower(towerTexture, "Tower1", click_position.x, click_position.y));
+                        } else if (towerSelection == 2) {
+                            map.add_tower(new AOETower(towerTexture, "Tower1", click_position.x, click_position.y));
+                        }
                     } else {
                         std::cout << "square already occupied" << std::endl;
                     }                 
@@ -136,6 +143,40 @@ int main() {
             }
         }
 
+        // Draw the attacks
+        for (int i=0; i<map.get_towers().size(); i++) {
+            
+            // Tower must be of AOE type AND actively attacking
+            if (map.get_towers()[i]->get_type() == 2 && map.get_towers()[i]->get_attacking() > 0) {
+                
+                // Draw a circle for the attack range
+                sf::CircleShape circle(map.get_towers()[i]->get_range());
+                sf::Vector2f currentTowerPos = map.get_towers()[i]->get_object().getPosition();
+                currentTowerPos.x -= (circle.getRadius() - 40);
+                currentTowerPos.y -= (circle.getRadius() - 40);
+                circle.setFillColor(sf::Color(250, 100, 50, map.get_towers()[i]->get_attacking()));
+                circle.setPosition(currentTowerPos);
+                window.draw(circle);
+                // cout << map.get_towers()[i]->get_attacking() << endl;
+
+            // Tower must be of ranged type AND actively attacking    
+            } else if (map.get_towers()[i]->get_type() == 1 && map.get_towers()[i]->get_attacking() >= 0) {
+                //
+                continue;
+            }
+
+            // Stop 'attacking' from reaching far below 0 (safety feature)
+            if (map.get_towers()[i]->get_attacking() < 0) {
+                map.get_towers()[i]->set_attacking(0);
+
+            // Decrease attacking (corresponds to the number of frames the attack is visible for)    
+            } else {
+                map.get_towers()[i]->set_attacking(map.get_towers()[i]->get_attacking()-1);
+            }
+
+        }
+
+
         // Draw the towers
         for (int i=0; i<map.get_towers().size(); i++) {
             window.draw(map.get_towers()[i]->get_object());
@@ -144,6 +185,15 @@ int main() {
         // Draw the enemies
         for (int i=0; i<map.get_enemies().size(); i++) {
             window.draw(map.get_enemies()[i]->get_object());
+        }
+
+        for (int i=0; i<map.get_enemies().size(); i++) {
+            if (map.get_enemies()[i]->get_object().getPosition().y > 800) {
+                map.remove_enemy(map.get_enemies()[i]);
+                cout << "enemy removed" << endl;
+            } else if (map.get_enemies()[i]->get_health() <= 0) {
+                map.remove_enemy(map.get_enemies()[i]);
+            }
         }
 
         // Update the window

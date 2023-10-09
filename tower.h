@@ -12,10 +12,18 @@
 #include <SFML/Window.hpp>
 
 class tower : public gameObject {
+    protected:
+        int type;
+        int attacking;
+        int range;
     public:
         tower();
         tower(sf::Texture texture, std::string name, float x, float y);
         virtual void attack(std::vector < enemy* > enemies) = 0;
+        int get_type();
+        int get_attacking();
+        int get_range();
+        void set_attacking(int attacking);
 
 };
 
