@@ -15,7 +15,7 @@ class tower : public gameObject {
     public:
         tower();
         tower(sf::Texture texture, std::string name, float x, float y);
-        virtual void attack(enemy** enemies, int num_enemies);
+        virtual void attack(std::vector < enemy* > enemies);
 
 };
 

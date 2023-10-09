@@ -24,9 +24,9 @@ void gameMap::remove_enemy(enemy* del_enemy) {
 void gameMap::towers_attack() {
 
     // call attack function for every tower
-    // for (int i=0; i<this->towers.size(); i++) {
-    //     this->towers[i]->attack(this->enemies, this->num_enemies);
-    // }
+    for (int i=0; i<this->towers.size(); i++) {
+        this->towers[i]->attack(this->enemies);
+    }
 
 }
 

@@ -86,6 +86,11 @@ int main() {
             }
         }
 
+        // Attack enemies
+        if (clock == 1000) {
+            map.towers_attack();
+        }
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {

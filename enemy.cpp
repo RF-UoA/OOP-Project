@@ -46,3 +46,5 @@ enemy::enemy(sf::Texture texture, std::string name, float x, float y, int health
 void enemy::take_damage(int damage) {this->health -= damage;}
 
 int enemy::get_speed() {return this->speed;}
+
+int enemy::get_health() {return this->health;}
