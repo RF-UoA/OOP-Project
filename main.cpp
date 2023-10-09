@@ -61,11 +61,18 @@ int main() {
         }
     }
 
+    sf::Vector2f firstEnemyPosition;
+    firstEnemyPosition.x = 0;
+    firstEnemyPosition.y = 0;
+
     // Initialise the game map
     gameMap map = gameMap();
 
     // Change this to determine which tower is placed
-    int towerSelection = 2;
+    int towerSelection = 1;
+
+    // Currency
+    int playerMoney = 0;
 
     // Initialise the game clock
     int clock = 0;
@@ -89,11 +96,6 @@ int main() {
             for (int i=0; i<map.get_enemies().size(); i++) {
                 map.get_enemies()[i]->moveObject(sf::Vector2f(0,map.get_enemies()[i]->get_speed()));
             }
-        }
-
-        // Attack enemies
-        if (clock == 1000) {
-            map.towers_attack();
         }
 
         sf::Event event;
@@ -130,6 +132,10 @@ int main() {
                         std::cout << "square already occupied" << std::endl;
                     }                 
                 }
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+                towerSelection = 1;
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+                towerSelection = 2;
             }
         }
 
@@ -143,6 +149,19 @@ int main() {
             }
         }
 
+        // delete dead enemies
+        for (int i=0; i<map.get_enemies().size(); i++) {
+            if (map.get_enemies()[i]->get_object().getPosition().y > 800) {
+                map.remove_enemy(map.get_enemies()[i]);
+                cout << "game over!" << endl;
+            } else if (map.get_enemies()[i]->get_health() <= 0) {
+                map.remove_enemy(map.get_enemies()[i]);
+                cout << "$" << playerMoney << endl;
+                playerMoney += 10;
+            }
+        }
+
+
         // Draw the attacks
         for (int i=0; i<map.get_towers().size(); i++) {
             
@@ -154,15 +173,20 @@ int main() {
                 sf::Vector2f currentTowerPos = map.get_towers()[i]->get_object().getPosition();
                 currentTowerPos.x -= (circle.getRadius() - 40);
                 currentTowerPos.y -= (circle.getRadius() - 40);
-                circle.setFillColor(sf::Color(250, 100, 50, map.get_towers()[i]->get_attacking()));
+                circle.setFillColor(sf::Color(250, 100, 50, 0.5 * map.get_towers()[i]->get_attacking()));
                 circle.setPosition(currentTowerPos);
                 window.draw(circle);
-                // cout << map.get_towers()[i]->get_attacking() << endl;
 
             // Tower must be of ranged type AND actively attacking    
-            } else if (map.get_towers()[i]->get_type() == 1 && map.get_towers()[i]->get_attacking() >= 0) {
-                //
-                continue;
+            } else if (map.get_towers()[i]->get_type() == 1 && map.get_towers()[i]->get_attacking() > 0) {
+                if (map.get_enemies().size() > 0) {
+                    sf::Vertex line[] = {
+                    sf::Vertex(map.get_towers()[i]->get_object().getPosition() + sf::Vector2f(40,40), sf::Color(0, 0, 250, map.get_towers()[i]->get_attacking())),
+                    sf::Vertex(firstEnemyPosition + sf::Vector2f(20,20), sf::Color(0, 0, 250, map.get_towers()[i]->get_attacking())),
+                    };
+                    window.draw(line, 2, sf::Lines);
+                    // cout << map.get_enemies()[0]->get_health() << endl;
+                }
             }
 
             // Stop 'attacking' from reaching far below 0 (safety feature)
@@ -176,6 +200,14 @@ int main() {
 
         }
 
+        // Attack enemies
+        if (clock == 1000) {
+            map.towers_attack();
+            if (map.get_enemies().size() > 0) {
+                firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
+            }
+        }
+
 
         // Draw the towers
         for (int i=0; i<map.get_towers().size(); i++) {
@@ -184,18 +216,11 @@ int main() {
 
         // Draw the enemies
         for (int i=0; i<map.get_enemies().size(); i++) {
-            window.draw(map.get_enemies()[i]->get_object());
-        }
-
-        for (int i=0; i<map.get_enemies().size(); i++) {
-            if (map.get_enemies()[i]->get_object().getPosition().y > 800) {
-                map.remove_enemy(map.get_enemies()[i]);
-                cout << "enemy removed" << endl;
-            } else if (map.get_enemies()[i]->get_health() <= 0) {
-                map.remove_enemy(map.get_enemies()[i]);
+            if (!map.get_enemies()[i]->get_health() <= 0) {
+                window.draw(map.get_enemies()[i]->get_object());
             }
         }
-
+    
         // Update the window
         window.display();
 
