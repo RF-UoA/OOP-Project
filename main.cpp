@@ -13,6 +13,8 @@
 #include "gameObject.h"
 #include "gameMap.h"
 #include "tower.h"
+#include "rangedTower.h"
+#include "AOETower.h"
 #include "enemy.h"
 #include "tile.h"
 
@@ -116,7 +118,7 @@ int main() {
 
                     // If square is not occupied, place the tower
                     if (empty_square == true) {
-                        map.add_tower(new tower(towerTexture, "Tower1", click_position.x, click_position.y));
+                        map.add_tower(new rangedTower(towerTexture, "Tower1", click_position.x, click_position.y));
                     } else {
                         std::cout << "square already occupied" << std::endl;
                     }                 

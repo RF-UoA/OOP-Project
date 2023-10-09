@@ -1,5 +1,5 @@
-play: main.o gameObject.o tower.o enemy.o gameMap.o tile.o
-	g++ main.o -lsfml-system -lsfml-window -lsfml-graphics gameObject.o tower.o enemy.o tile.o gameMap.o -o play
+play: main.o gameObject.o tower.o AOETower.o rangedTower.o enemy.o gameMap.o 
+	g++ main.o -lsfml-system -lsfml-window -lsfml-graphics gameObject.o tower.o AOETower.o rangedTower.o enemy.o gameMap.o -o play
 
 main.o: main.cpp
 	g++ -c main.cpp 
@@ -10,11 +10,14 @@ gameObject.o: gameObject.cpp
 tower.o: tower.cpp
 	g++ -c tower.cpp
 
+AOETower.o: AOETower.cpp
+	g++ -c AOETower.cpp
+
+rangedTower.o: rangedTower.cpp
+	g++ -c rangedTower.cpp
+
 enemy.o: enemy.cpp
 	g++ -c enemy.cpp
-
-tile.o: tile.cpp
-	g++ -c tile.cpp
 
 gamegameMap.o: gameMap.cpp
 	g++ -c gameMap.cpp
