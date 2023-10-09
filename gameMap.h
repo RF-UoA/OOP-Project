@@ -14,18 +14,9 @@
 #include <iostream>
 
 class gameMap {
-    void setUpInitialState();
-    void setUpTiles();
 
     protected:
         
-        int total_num;
-        int num_towers;
-        int num_enemies;
-        int num_tiles;
-        gameObject** all_objects;
-        // tower** towers;
-        // enemy** enemies;
         std::vector < enemy* > enemies;
         std::vector < tower * > towers;
 
@@ -36,7 +27,6 @@ class gameMap {
         void remove_enemy(enemy* enemy);
         void towers_attack();
         void move_enemies();
-        int get_num_enemies();
         std::vector < enemy* > get_enemies();
         std::vector < tower* > get_towers();
         ~gameMap();

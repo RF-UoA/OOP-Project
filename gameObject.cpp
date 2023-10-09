@@ -1,6 +1,7 @@
 #include "gameObject.h"
 #include <iostream>
 
+// Defualt constructor
 gameObject::gameObject() {
     
     // initialise attributes for default constructor
@@ -23,6 +24,7 @@ gameObject::gameObject() {
 
 }
 
+// Constructor
 gameObject::gameObject(sf::Texture texture, std::string name, float x, float y) {
     
     // initialise attributes for constructor
@@ -31,7 +33,8 @@ gameObject::gameObject(sf::Texture texture, std::string name, float x, float y) 
     sf::Sprite sprite;
     sprite.setTexture(this->texture);
     
-    sf::Vector2f desiredSize(80.0f, 80.0f); // Replace with your desired size
+    // Define the disired size for sprite dimensions
+    sf::Vector2f desiredSize(80.0f, 80.0f);
 
     // Calculate the scaling factors
     float scaleX = desiredSize.x / texture.getSize().x;
