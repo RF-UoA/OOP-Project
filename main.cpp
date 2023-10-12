@@ -120,7 +120,7 @@ int main() {
         }
 
         // Enemy movement handling
-        if (clock%20 == 0) {
+        if (clock%5 == 0) {
             for (int i=0; i<map.get_enemies().size(); i++) {
                 map.get_enemies()[i]->moveObject(sf::Vector2f(0,map.get_enemies()[i]->get_speed()));
             }
@@ -129,7 +129,7 @@ int main() {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window.close();
+                window.close();    
 
             // Query for mouse click    
             } else if (event.type == sf::Event::MouseButtonPressed) {
@@ -189,7 +189,6 @@ int main() {
             }
         }
 
-
         // Draw the attacks
         for (int i=0; i<map.get_towers().size(); i++) {
             
@@ -229,7 +228,7 @@ int main() {
         }
 
         // Attack enemies
-        if (clock == 1000) {
+        if (clock%333 == 0) {
             map.towers_attack();
             if (map.get_enemies().size() > 0) {
                 firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
@@ -264,6 +263,8 @@ int main() {
         }
         
         while (pause == true) {
+            // Poll for events, resets inputs so they aren't retroactively registered
+            while (window.pollEvent(event)) {}
             // lock the input to prevent multiple clicks
             while (lock_input == true) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) == false && lock_input == true) {
