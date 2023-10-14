@@ -1,5 +1,5 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#ifndef ENEMY_MEDIUM_H
+#define ENEMY_MEDIUM_H
 
 // General libraries
 #include <string>
@@ -11,18 +11,16 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
-class enemy : public gameObject {
+class enemy_medium : public enemy {
     protected:
-        int health;
-        int speed;
-    
+        int dodge_chance; // random chance to avoid damage (0% - 7%)
     public:
-        enemy();
-        enemy(sf::Texture texture, std::string name, float x, float y, int health, int speed);
+        enemy_medium();
+        enemy_medium(sf::Texture texture, std::string name, float x, float y, int health, int speed);
         void take_damage(int damage);
         int get_speed();
         int get_health();
-
+        int get_dodge_chance();
 };
 
 #endif

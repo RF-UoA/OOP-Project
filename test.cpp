@@ -1,11 +1,26 @@
 #include <iostream>
 #include <time.h>
 
-using namespace std;
+// Standard libraries
+#include <iostream>
+#include <math.h>
+#include <stdlib.h>
+#include <cmath>
 
+// SFML modules and libraries
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
+
+using namespace std;
 int main() {
-    srand(time(NULL));
-    int a = (rand() % 101) - 1;
-    int b = (rand() % 101) - 1;
-    cout << a << " " << b << endl;
-};
+
+    
+    sf::Font(font);
+    sf::Text text;
+    text.setFont(font);
+    text.setString("Hello World");
+    text.setCharacterSize(200);
+    text.setFillColor(sf::Color::Red);
+    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+}

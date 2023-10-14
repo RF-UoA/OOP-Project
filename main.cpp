@@ -35,8 +35,40 @@ int main() {
 
     // Define button lock
     bool lock_input = false;
+    bool last_input_1 = true;
+    bool menu_toggle = true;
+    bool game_over = false;
 
-    //Create pause menu assets
+    // Create tower selection Sprites
+    sf::Texture towerTexture1;
+    if (!towerTexture1.loadFromFile("images/Tower_1.png")) {
+        return 1;
+    }
+    const sf::Texture *towerPointer1 = &towerTexture1;
+
+    sf::Texture towerTexture2;
+    if (!towerTexture2.loadFromFile("images/Tower_2.png")) {
+        return 1;
+    }
+    const sf::Texture *towerPointer2 = &towerTexture2;
+
+    // Create single box for both tower selections
+    sf::RectangleShape towerUI(sf::Vector2f(180, 70));    
+    towerUI.setFillColor(sf::Color::White);
+    towerUI.setPosition(0,730);
+
+    //Create pause menu and main menu assets
+        // main menu
+        sf::Texture menuTexture;
+        if (!menuTexture.loadFromFile("images/Menu.png")) {
+            return 1;
+        }
+        const sf::Texture *menuPointer = &menuTexture;
+        sf::RectangleShape menu(sf::Vector2f(800, 800));
+        menu.setFillColor(sf::Color::White);
+        menu.setPosition(0,0);
+        menu.setTexture(menuPointer);
+
         //Transparent Backdrop
         sf::RectangleShape transparent(sf::Vector2f(800, 800));
         transparent.setFillColor(sf::Color(0,0,0,128));
@@ -49,7 +81,6 @@ int main() {
         }
         // create a pointer to the texture
         const sf::Texture *pausePointer = &pauseTexture;
-
         // make the pause menu shape
         sf::RectangleShape backdrop(sf::Vector2f(800/2.6, 800/2));
         backdrop.setFillColor(sf::Color::White);
@@ -101,6 +132,21 @@ int main() {
 
     // Currency
     int playerMoney = 0;
+    
+    // Make an integer value into a string and convert to "Text" for visual display
+    // load font from file and apply it to the current currency count
+    sf::Font font;
+    font.loadFromFile("font/OpenSans-Bold.ttf");
+    string moneyDisplay = to_string(playerMoney);
+    sf::Text visibleMoney;
+    visibleMoney.setFont(font);
+    visibleMoney.setString(moneyDisplay);
+    visibleMoney.setCharacterSize(50);
+    visibleMoney.setFillColor(sf::Color::White);
+    visibleMoney.setOutlineColor(sf::Color::Black);
+    visibleMoney.setStyle(sf::Text::Bold);
+    visibleMoney.setPosition(10,0);
+    //cout << moneyDisplay << endl;
 
     // Initialise the game clock
     int clock = 0;
@@ -115,9 +161,9 @@ int main() {
         }
 
         // Periodic spawning of enemies
-        if (clock == 1000) {
-            map.spawn_enemy(new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
-        }
+        // if (clock == 1000) {
+        //     map.spawn_enemy(new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
+        // }
 
         // Enemy movement handling
         if (clock%5 == 0) {
@@ -162,8 +208,10 @@ int main() {
                 }
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
                 towerSelection = 1;
+                last_input_1 = true;
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
                 towerSelection = 2;
+                last_input_1 = false;
             }
         }
 
@@ -177,15 +225,31 @@ int main() {
             }
         }
 
+        // draw money
+        window.draw(visibleMoney);
+
+        // draw tower selection
+        if (last_input_1 == true) {
+            towerUI.setTexture(towerPointer1);
+            window.draw(towerUI);
+        } else if (last_input_1 == false) {
+            towerUI.setTexture(towerPointer2);
+            window.draw(towerUI);
+        }
+
         // delete dead enemies
         for (int i=0; i<map.get_enemies().size(); i++) {
             if (map.get_enemies()[i]->get_object().getPosition().y > 800) {
                 map.remove_enemy(map.get_enemies()[i]);
+                //delete(map.get_enemies()[i]);
                 cout << "game over!" << endl;
             } else if (map.get_enemies()[i]->get_health() <= 0) {
                 map.remove_enemy(map.get_enemies()[i]);
+                //delete(map.get_enemies()[i]);
                 cout << "$" << playerMoney << endl;
                 playerMoney += 10;
+                moneyDisplay = to_string(playerMoney);
+                visibleMoney.setString(moneyDisplay);
             }
         }
 
@@ -261,6 +325,16 @@ int main() {
                 pause = true;
                 lock_input = true;
         }
+
+        // while (menu_toggle = true) {
+        //     // Poll for events, resets inputs so they aren't retroactively registered
+        //     while (window.pollEvent(event)) {}
+
+        //     //window.draw(menu);
+        //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+        //         menu_toggle = false;
+        //     }
+        // }
         
         while (pause == true) {
             // Poll for events, resets inputs so they aren't retroactively registered
