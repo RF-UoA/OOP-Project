@@ -61,20 +61,6 @@ int main() {
     towerUI.setFillColor(sf::Color::White);
     towerUI.setPosition(0,730);
 
-    // TEMPORARY SHAPE FOR CHECKING MENU SELECTIONS
-        //         // if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
-        //         //     if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
-        //         //         cout << "success" << endl;
-        //         //         pause = false;
-        //         //     }
-        //         // }
-        // sf::RectangleShape resume(sf::Vector2f(800/2.6 - 800/10, 80));
-        // resume.setFillColor(sf::Color::Green);
-        // resume.setOutlineThickness(5);
-        // resume.setOutlineColor(sf::Color(250, 150, 100));
-        // resume.setPosition(400 - (800/2.6 - 80)/2, 250);
-
-
     //Create pause menu and main menu assets
         // main menu
         sf::Texture menuTexture;
@@ -212,6 +198,7 @@ int main() {
     errorMessage.setFillColor(sf::Color::White);
     errorMessage.setPosition(200,380);
     int errorMessageCountdown = 0;
+    int errorText;
 
     // Initialise the game clock
     int clock = 0;
@@ -315,6 +302,12 @@ int main() {
                             playerMoney -= 150;
                         }
                     } else {
+                        if (map.get_enemies().size() > 0) {
+                            firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
+                        }
+                        map.towers_attack();
+                        srand(time(NULL));
+                        errorText = rand() % 10;
                         errorMessageCountdown = 200;
                     }                 
                 }
@@ -452,6 +445,40 @@ int main() {
 
         // draw the error message
         if (errorMessageCountdown > 0) {
+            switch (errorText) {
+                case 1: 
+                    errorMessage.setString("FIRE!");
+                    break;
+                case 2:
+                    errorMessage.setString("THERES TOO MANY OF THEM!");
+                    break;
+                case 3:
+                    errorMessage.setString("THEY DONT STAND A CHANCE!");
+                    break;
+                case 4:
+                    errorMessage.setString("DEFEND THE CASTLE!");
+                    break;
+                case 5:
+                    errorMessage.setString("I'm tired");
+                    break;
+                case 6:
+                    errorMessage.setString("HELP!");
+                    break;
+                case 7:
+                    errorMessage.setString("WHY AM I DOING ALL THE WORK?!");
+                    break;
+                case 8:
+                    errorMessage.setString("KILL THEM!");
+                    break;
+                case 9:
+                    errorMessage.setString("Slime You Later!");
+                    break;
+                case 10:
+                    errorMessage.setString("BRATATATATAT");
+                    break;
+                default:
+                    break;
+            }
             errorMessage.setFillColor(sf::Color(250,250,250,errorMessageCountdown+50));
             window.draw(errorMessage);
             errorMessageCountdown--;
@@ -483,6 +510,12 @@ int main() {
                 }
             }
 
+            // Close the window if close button is clicked
+            if (event.type == sf::Event::Closed) {
+                window.close();   
+                return 0; 
+            }
+
             // If the user presses escape
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && (pause == true)) {
                 // lock the input until they release escape
@@ -493,31 +526,30 @@ int main() {
                     lock_input = false;
                     }
                 }
-                    std::cout << "UnPaused" << std::endl;
+                    // std::cout << "UnPaused" << std::endl;
                     // Set pause to false
                     pause = false;
             }
 
             // check if user presses a menu button and output accordingly
-            sf::Vector2f menu_click_position;
-                if(event.type == sf::Event::MouseButtonPressed) {
-                    menu_click_position.x = (std::floor(event.mouseButton.x/80))*80;
-                    menu_click_position.y = (std::floor(event.mouseButton.y/80))*80;
-                    if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
-                        if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
-                            cout << "success" << endl;
-                            pause = false;
-                        }
+            sf::Vector2i menu_click_position = sf::Mouse::getPosition(window);
+            // cout << menu_click_position.x << "    ";
+            // cout << menu_click_position.y << endl;
+            if(event.type == sf::Event::MouseButtonPressed) {
+                if (menu_click_position.x >= 282 && menu_click_position.x <= 517) {
+                    if (menu_click_position.y >= 245 && menu_click_position.y <= 333) {
+                        pause = false;
+                    } else if (menu_click_position.y >= 345 && menu_click_position.y <= 433) {
+                        // SAVE THE SCORE AND TELL THE PLAYER
+                        //cout << "Save" << endl;
+                    } else if (menu_click_position.y >= 445 && menu_click_position.y <= 533) {
+                        //cout << "close" << endl;
+                        window.close();   
+                        return 0; 
                     }
                 }
-                // if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
-                //     if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
-                //         cout << "success" << endl;
-                //         pause = false;
-                //     }
-                // }
+            }
         }
-
     }
 
     return 0;
