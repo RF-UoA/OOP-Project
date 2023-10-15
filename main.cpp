@@ -2,7 +2,10 @@
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
+#include <cstdlib>
 #include <cmath>
+#include <fstream>
+#include <string>
 
 // SFML modules and libraries
 #include <SFML/Graphics.hpp>
@@ -151,6 +154,23 @@ int main() {
     int towerSelection = 1;
     int enemySelect;
 
+    // Score
+    int score = 0;
+    int highscore = 0;
+
+    // reading save file
+    fstream scoreFile;
+    fstream highscoreFile;
+    highscoreFile.open("text/highscoreStorage.txt", ios::in); // read
+    if (highscoreFile.is_open()) { // if the file is open
+        string readHighscore;
+        while (getline(highscoreFile, readHighscore)) {
+            cout << readHighscore << endl;
+            highscore = stoi(readHighscore);
+        }
+        highscoreFile.close();
+    }
+
     // Currency
     int playerMoney = 200;
     
@@ -166,6 +186,15 @@ int main() {
     visibleMoney.setFillColor(sf::Color::White);
     visibleMoney.setStyle(sf::Text::Bold);
     visibleMoney.setPosition(10,0);
+
+    // string moneyDisplay = to_string(playerMoney);
+    // sf::Text visibleMoney;
+    // visibleMoney.setFont(font);
+    // visibleMoney.setString("$" + moneyDisplay);
+    // visibleMoney.setCharacterSize(50);
+    // visibleMoney.setFillColor(sf::Color::White);
+    // visibleMoney.setStyle(sf::Text::Bold);
+    // visibleMoney.setPosition(10,0);
 
     sf::Text menuTitle;
     menuTitle.setCharacterSize(70);
@@ -187,7 +216,8 @@ int main() {
     kill will give you money which you can use to build\n\
     more towers. Select a location on the grid to build\n\
     a tower of your choice. Good luck!\n\n\
-    click to begin.");
+    click to begin.\n\
+    press L to load game");
     menuMessage.setFillColor(sf::Color::Black);
     menuMessage.setPosition(110,200);
 
@@ -232,9 +262,21 @@ int main() {
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         startGame = false;
                     }
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+                    scoreFile.open("text/saveStorage.txt", ios::in); // read
+                    if (scoreFile.is_open()) { // if the file is open
+                        string readScore;
+                        while (getline(scoreFile, readScore)) {
+                            cout << readScore << endl;
+                            score = stoi(readScore); // string to integer
+                            playerMoney = stoi(readScore) + 200; // give all money back to the player
+                        }
+                        scoreFile.close();
+                    }
+                    startGame = false;
                 }
             } 
-        }       
+        }
 
         // Manual game clock, increases every frame
         clock++;
@@ -257,7 +299,6 @@ int main() {
                 //cout << "Heavy" << endl;
             } else {
                 map.spawn_enemy(new enemy(enemyMedium, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
-                map.spawn_enemy(new enemy_heavy(enemyHeavy, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
                 //cout << "Medium" << endl;
             }
         }
@@ -355,6 +396,7 @@ int main() {
                 map.remove_enemy(map.get_enemies()[i]);
                 // cout << "$" << playerMoney << endl;
                 playerMoney += 100;
+                score += 100;
             }
         }
 
@@ -373,6 +415,17 @@ int main() {
             }
             window.draw(menuTitle);
             window.display();
+
+            // if the score is higher than the highest, rewrite the highscore
+            cout << score << " " << highscore << endl;
+            if (score > highscore) {
+                highscoreFile.open("text/highscoreStorage.txt", ios::out); // append (add on)
+                if (highscoreFile.is_open()) { // if the file is open
+                    highscoreFile << score << endl; // write test to a file
+                    highscoreFile.close(); // close the file
+                }
+            }
+
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
                     window.close();   
@@ -445,6 +498,7 @@ int main() {
 
         // draw the error message
         if (errorMessageCountdown > 0) {
+            // select a random message every second
             switch (errorText) {
                 case 1: 
                     errorMessage.setString("FIRE!");
@@ -540,7 +594,19 @@ int main() {
                     if (menu_click_position.y >= 245 && menu_click_position.y <= 333) {
                         pause = false;
                     } else if (menu_click_position.y >= 345 && menu_click_position.y <= 433) {
-                        // SAVE THE SCORE AND TELL THE PLAYER
+                        scoreFile.open("text/saveStorage.txt", ios::out); // write
+                        if (scoreFile.is_open()) { // if the file is open
+                            scoreFile << score << endl; // write test to a file
+                            scoreFile.close(); // close the file
+                        }
+                        if (score > highscore) {
+                            highscoreFile.open("text/highscoreStorage.txt", ios::out); // append (add on)
+                            if (highscoreFile.is_open()) { // if the file is open
+                                highscoreFile << score << endl; // write test to a file
+                                highscoreFile.close(); // close the file
+                            }
+                        }
+                        // TELL THE USER THE GAME IS SAVED
                         //cout << "Save" << endl;
                     } else if (menu_click_position.y >= 445 && menu_click_position.y <= 533) {
                         //cout << "close" << endl;
