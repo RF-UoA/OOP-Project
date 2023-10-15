@@ -47,6 +47,11 @@ int main() {
     bool menu_toggle = true;
     bool game_over = false;
 
+    // define clock interval for speed up and slow down
+    int clockInterval = 1000;  
+    int attackPeriod = 250;
+    int movePeriod = 4;
+
     // Create tower selection Sprites
     sf::Texture towerTexture1;
     if (!towerTexture1.loadFromFile("images/Tower_1.png")) {
@@ -66,17 +71,6 @@ int main() {
     towerUI.setPosition(0,730);
 
     //Create pause menu and main menu assets
-        // main menu
-        sf::Texture menuTexture;
-        if (!menuTexture.loadFromFile("images/Menu.png")) {
-            return 1;
-        }
-        const sf::Texture *menuPointer = &menuTexture;
-        sf::RectangleShape menu(sf::Vector2f(800, 800));
-        menu.setFillColor(sf::Color::White);
-        menu.setPosition(0,0);
-        menu.setTexture(menuPointer);
-
         //Transparent Backdrop
         sf::RectangleShape transparent(sf::Vector2f(800, 800));
         transparent.setFillColor(sf::Color(0,0,0,128));
@@ -95,6 +89,17 @@ int main() {
         backdrop.setPosition((800/2) - (800/2.6)/2, 800/4);
         // access texture pointer annd apply it to the shape
         backdrop.setTexture(pausePointer);
+
+    // Speed up
+    sf::Texture forwardTexture;
+    if (!forwardTexture.loadFromFile("images/fastForward.png")) {
+        return 1;
+    }
+    const sf::Texture *forwardPointer = &forwardTexture;
+    sf::RectangleShape fastForward(sf::Vector2f(80, 80));
+    fastForward.setFillColor(sf::Color::White);
+    fastForward.setPosition(710,0);
+    fastForward.setTexture(forwardPointer);
 
     // Create a 2D array of sprites for the grid
     std::vector<std::vector<sf::Sprite>> grid(gridSize, std::vector<sf::Sprite>(gridSize));
@@ -238,7 +243,8 @@ int main() {
     your keyboard to switch between the types.Each enemy\n\
     kill will give you money which you can use to build\n\
     more towers. Select a location on the grid to build\n\
-    a tower of your choice. Good luck!\n\n\
+    a tower of your choice. Good luck!\n\
+    To fast forward, hold F.\n\n\
     click to begin.\n\
     press L to load game");
     menuMessage.setFillColor(sf::Color::Black);
@@ -300,14 +306,24 @@ int main() {
             } 
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+            clockInterval = 500;
+            attackPeriod = 125;
+            movePeriod = 2;
+        } else {
+            clockInterval = 1000;
+            attackPeriod = 250;
+            movePeriod = 4;
+        }
+        
         // Manual game clock, increases every frame
         clock++;
-        if (clock > 1000) {
+        if (clock > clockInterval) {
             clock = 1;
         }
         
         // Periodic spawning of enemies
-        if (clock == 1000) {
+        if (clock == clockInterval) {
             // randomise seed for aw value between 0 and 10
             srand(time(NULL));
             enemySelect = (rand() % 11) - 1;
@@ -326,7 +342,7 @@ int main() {
         }
 
         // Enemy movement handling
-        if (clock%5 == 0) {
+        if (clock % movePeriod == 0) {
             for (int i=0; i<map.get_enemies().size(); i++) {
                 map.get_enemies()[i]->moveObject(sf::Vector2f(0,map.get_enemies()[i]->get_speed()));
             }
@@ -435,6 +451,11 @@ int main() {
             highscoreDisplay = to_string(score);
             visibleHighscore.setString("Highscore: " + highscoreDisplay);
         }
+
+        // draw fast forwards
+        if (clockInterval == 500) {
+            window.draw(fastForward);
+        }
         
         // handle game ending
         while (game_over == true) {
@@ -472,7 +493,7 @@ int main() {
         }
         
         // Attack enemies periodically
-        if (clock%250 == 0) {
+        if (clock % attackPeriod == 0) {
             if (map.get_enemies().size() > 0) {
                 firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
             }

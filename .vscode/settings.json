@@ -5,6 +5,7 @@
         "new": "cpp",
         "cmath": "cpp",
         "iosfwd": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "random": "cpp"
     }
 }
