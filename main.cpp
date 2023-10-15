@@ -57,6 +57,20 @@ int main() {
     towerUI.setFillColor(sf::Color::White);
     towerUI.setPosition(0,730);
 
+    // TEMPORARY SHAPE FOR CHECKING MENU SELECTIONS
+        //         // if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
+        //         //     if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
+        //         //         cout << "success" << endl;
+        //         //         pause = false;
+        //         //     }
+        //         // }
+        // sf::RectangleShape resume(sf::Vector2f(800/2.6 - 800/10, 80));
+        // resume.setFillColor(sf::Color::Green);
+        // resume.setOutlineThickness(5);
+        // resume.setOutlineColor(sf::Color(250, 150, 100));
+        // resume.setPosition(400 - (800/2.6 - 80)/2, 250);
+
+
     //Create pause menu and main menu assets
         // main menu
         sf::Texture menuTexture;
@@ -143,7 +157,6 @@ int main() {
     visibleMoney.setString(moneyDisplay);
     visibleMoney.setCharacterSize(50);
     visibleMoney.setFillColor(sf::Color::White);
-    visibleMoney.setOutlineColor(sf::Color::Black);
     visibleMoney.setStyle(sf::Text::Bold);
     visibleMoney.setPosition(10,0);
     //cout << moneyDisplay << endl;
@@ -320,6 +333,7 @@ int main() {
                 // draw objects to the window
                 window.draw(transparent);
                 window.draw(backdrop);
+                //window.draw(resume);
                 window.display();
                 // pause the game
                 pause = true;
@@ -364,8 +378,16 @@ int main() {
 
             // check if user presses a menu button and output accordingly
             sf::Vector2f menu_click_position;
-                menu_click_position.x = (std::floor(event.mouseButton.x/80))*80;
-                menu_click_position.y = (std::floor(event.mouseButton.y/80))*80;
+                if(event.type == sf::Event::MouseButtonPressed) {
+                    menu_click_position.x = (std::floor(event.mouseButton.x/80))*80;
+                    menu_click_position.y = (std::floor(event.mouseButton.y/80))*80;
+                    if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
+                        if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
+                            cout << "success" << endl;
+                            pause = false;
+                        }
+                    }
+                }
                 // if (menu_click_position.x >= (800/2 - (800/2.6 - 800/10))) {
                 //     if (menu_click_position.x <= ((800/2 - 800/2.6 - 800/10) + (800/2.6 - 800/10))) {
                 //         cout << "success" << endl;
