@@ -6,6 +6,7 @@
 #include <cmath>
 #include <fstream>
 #include <string>
+#include <string.h>
 
 // SFML modules and libraries
 #include <SFML/Graphics.hpp>
@@ -165,7 +166,6 @@ int main() {
     if (highscoreFile.is_open()) { // if the file is open
         string readHighscore;
         while (getline(highscoreFile, readHighscore)) {
-            cout << readHighscore << endl;
             highscore = stoi(readHighscore);
         }
         highscoreFile.close();
@@ -185,16 +185,39 @@ int main() {
     visibleMoney.setCharacterSize(50);
     visibleMoney.setFillColor(sf::Color::White);
     visibleMoney.setStyle(sf::Text::Bold);
-    visibleMoney.setPosition(10,0);
+    visibleMoney.setPosition(10,50);
 
-    // string moneyDisplay = to_string(playerMoney);
-    // sf::Text visibleMoney;
-    // visibleMoney.setFont(font);
-    // visibleMoney.setString("$" + moneyDisplay);
-    // visibleMoney.setCharacterSize(50);
-    // visibleMoney.setFillColor(sf::Color::White);
-    // visibleMoney.setStyle(sf::Text::Bold);
-    // visibleMoney.setPosition(10,0);
+    //Score Display
+    string scoreDisplay = to_string(score);
+    sf::Text visibleScore;
+    visibleScore.setFont(font);
+    visibleScore.setString("Score: " + scoreDisplay);
+    visibleScore.setCharacterSize(50);
+    visibleScore.setFillColor(sf::Color::White);
+    visibleScore.setStyle(sf::Text::Bold);
+    visibleScore.setPosition(10,0);
+
+    // Highscore Display
+    string highscoreDisplay = to_string(highscore);
+    sf::Text visibleHighscore;
+    visibleHighscore.setFont(font);
+    visibleHighscore.setString("Highscore: " + highscoreDisplay);
+    visibleHighscore.setCharacterSize(25);
+    visibleHighscore.setFillColor(sf::Color::Black);
+    visibleHighscore.setStyle(sf::Text::Bold);
+    visibleHighscore.setPosition(625 - (12.5 * highscoreDisplay.length()),750);
+
+    // Visible costs
+    string rangeCost = to_string(100);
+    string aoeCost = to_string(150);
+    sf::Text towerCosts;
+    towerCosts.setFont(font);
+    towerCosts.setString(rangeCost + "     " + aoeCost);
+    towerCosts.setCharacterSize(25);
+    towerCosts.setFillColor(sf::Color::Black);
+    towerCosts.setStyle(sf::Text::Bold);
+    towerCosts.setPosition(20,700);
+
 
     sf::Text menuTitle;
     menuTitle.setCharacterSize(70);
@@ -267,7 +290,6 @@ int main() {
                     if (scoreFile.is_open()) { // if the file is open
                         string readScore;
                         while (getline(scoreFile, readScore)) {
-                            cout << readScore << endl;
                             score = stoi(readScore); // string to integer
                             playerMoney = stoi(readScore) + 200; // give all money back to the player
                         }
@@ -283,7 +305,7 @@ int main() {
         if (clock > 1000) {
             clock = 1;
         }
-
+        
         // Periodic spawning of enemies
         if (clock == 1000) {
             // randomise seed for aw value between 0 and 10
@@ -373,7 +395,9 @@ int main() {
 
         // draw money
         window.draw(visibleMoney);
-        //window.draw(visibleScore);
+        window.draw(visibleScore);
+        window.draw(visibleHighscore);
+        window.draw(towerCosts);
 
         // draw tower selection
         if (last_input_1 == true) {
@@ -403,6 +427,14 @@ int main() {
         // update money
         moneyDisplay = to_string(playerMoney);
         visibleMoney.setString("$" + moneyDisplay);
+        // update score
+        scoreDisplay = to_string(score);
+        visibleScore.setString("Score: " + scoreDisplay);
+        // update highscore
+        if (score > highscore) {
+            highscoreDisplay = to_string(score);
+            visibleHighscore.setString("Highscore: " + highscoreDisplay);
+        }
         
         // handle game ending
         while (game_over == true) {
