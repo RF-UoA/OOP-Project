@@ -14,12 +14,12 @@
 class enemy : public gameObject {
     protected:
         int health;
-        int speed;
+        float speed;
     
     public:
         enemy();
         enemy(sf::Texture texture, std::string name, float x, float y, int health, int speed);
-        void take_damage(int damage);
+        virtual void take_damage(int damage);
         int get_speed();
         int get_health();
 

@@ -1,9 +1,9 @@
 #include "enemy.h"
-#include "enemy_light.h"
+#include "enemy_heavy.h"
 #include <iostream>
 #include <time.h>
 
-enemy_light::enemy_light() {
+enemy_heavy::enemy_heavy() {
     // random values dependent on time
     srand(time(NULL));
         
@@ -26,12 +26,12 @@ enemy_light::enemy_light() {
     this->object = sprite;
 
     this->health = 1;
-    this->speed_bonus = (rand() % 51) - 1; //random value between 0% and 50%
-    this->speed = 1 * speed_bonus;
-    this->reduced_defense = (rand() % 81) - 1; //random value between 0 and 80
+    this->speed_reduction = (rand() % 21) - 1; //random value between 0% and 20%
+    this->speed = 1 - (1 * ((speed_reduction)/100));
+    this->increased_defense = (rand() % 41) - 1; //random value between 0 and 40%
 };
 
-enemy_light::enemy_light(sf::Texture texture, std::string name, float x, float y, int health, int speed) {
+enemy_heavy::enemy_heavy(sf::Texture texture, std::string name, float x, float y, int health, int speed) {
     // random values dependent on time
     srand(time(NULL));
     
@@ -46,18 +46,20 @@ enemy_light::enemy_light(sf::Texture texture, std::string name, float x, float y
     this->pos.y = y;
     this->object.setPosition(this->pos);
     this->health = health;
-    this->speed_bonus = (rand() % 51) - 1; //random value between 0% and 50%
-    this->speed = speed * (100 + speed_bonus)/100; // speed in relation to 
-    this->reduced_defense = (rand() % 81) - 1; //random value between 0 and 80
+    this->speed_reduction = (rand() % 21) - 1; //random value between 0% and 20%
+    this->speed = speed - (speed * ((speed_reduction)/100));
+    this->increased_defense = (rand() % 41) - 1; //random value between 0 and 40%
 
 };
 
-void enemy_light::take_damage(int damage) {this->health = this->health - (damage * (100 + this->reduced_defense)/100);}
+void enemy_heavy::take_damage(int damage) {
+    this->health = this->health - (damage - (damage * (this->increased_defense)/100));
+};
 
-int enemy_light::get_speed() {return this->speed;}
+int enemy_heavy::get_speed() {return this->speed;}
 
-int enemy_light::get_health() {return this->health;}
+int enemy_heavy::get_health() {return this->health;}
 
-int enemy_light::get_speed_bonus() {return this->speed_bonus;} // in percentage
+int enemy_heavy::get_speed_reduction() {return this->speed_reduction;} // in percentage
 
-int enemy_light::get_reduced_defense() {return this->reduced_defense;}
+int enemy_heavy::get_increased_defense() {return this->increased_defense;}

@@ -2,6 +2,8 @@
 #include <cmath>
 #include "AOETower.h"
 
+using namespace std;
+
 AOETower::AOETower() : tower() {this->type = 2;}
 
 AOETower::AOETower(sf::Texture texture, std::string name, float x, float y) : tower(texture, name, x, y) {this->type = 2; this->range = 300;}

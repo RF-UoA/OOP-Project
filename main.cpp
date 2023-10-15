@@ -17,6 +17,9 @@
 #include "AOETower.h"
 #include "enemy.h"
 #include "tile.h"
+#include "enemy_light.h"
+#include "enemy_medium.h"
+#include "enemy_heavy.h"
 
 using namespace std;
 
@@ -34,7 +37,7 @@ int main() {
     int pause_pos = 800/2.6 - 800/10;
     bool pause = 0;
 
-    // Define button lock
+    // Define toggle inputs
     bool lock_input = false;
     bool last_input_1 = true;
     bool menu_toggle = true;
@@ -119,7 +122,18 @@ int main() {
     }
 
     // Load texture for sub-class enemies
-
+    sf::Texture enemyLight;
+    if (!enemyLight.loadFromFile("images/enemyLight.png")) {
+        return 1;
+    }
+    sf::Texture enemyMedium;
+    if (!enemyMedium.loadFromFile("images/enemyMedium.png")) {
+        return 1;
+    }
+    sf::Texture enemyHeavy;
+    if (!enemyHeavy.loadFromFile("images/enemyHeavy.png")) {
+        return 1;
+    }
     // Load texture for towers
     sf::Texture towerTexture;
     if (!towerTexture.loadFromFile("images/tower.png")) {
@@ -143,8 +157,9 @@ int main() {
     // Initialise the game map
     gameMap map = gameMap();
 
-    // Change this to determine which tower is placed
+    // Change this to determine which tower or enemy is placed
     int towerSelection = 1;
+    int enemySelect;
 
     // Currency
     int playerMoney = 200;
@@ -238,7 +253,20 @@ int main() {
 
         // Periodic spawning of enemies
         if (clock == 1000) {
-            map.spawn_enemy(new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
+            // randomise seed for aw value between 0 and 10
+            srand(time(NULL));
+            enemySelect = (rand() % 11) - 1;
+
+            if (enemySelect <= 2) {
+                map.spawn_enemy(new enemy_light(enemyLight, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
+                cout << "Light" << endl;
+            } else if (enemySelect >= 8) {
+                map.spawn_enemy(new enemy_heavy(enemyHeavy, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
+                cout << "Heavy" << endl;
+            } else {
+                map.spawn_enemy(new enemy(enemyMedium, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
+                cout << "Medium" << endl;
+            }
         }
 
         // Enemy movement handling
@@ -426,7 +454,7 @@ int main() {
         window.display();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && (pause == false)) {
-                std::cout << "Paused" << std::endl;
+                //std::cout << "Paused" << std::endl;
                 // draw objects to the window
                 window.draw(transparent);
                 window.draw(backdrop);
@@ -436,16 +464,6 @@ int main() {
                 pause = true;
                 lock_input = true;
         }
-
-        // while (menu_toggle = true) {
-        //     // Poll for events, resets inputs so they aren't retroactively registered
-        //     while (window.pollEvent(event)) {}
-
-        //     //window.draw(menu);
-        //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-        //         menu_toggle = false;
-        //     }
-        // }
         
         while (pause == true) {
             // Poll for events, resets inputs so they aren't retroactively registered

@@ -18,7 +18,7 @@ void gameMap::spawn_enemy(enemy* new_enemy) {
 void gameMap::remove_enemy(enemy* del_enemy) {
 
     this->enemies.erase(std::remove(this->enemies.begin(), this->enemies.end(), del_enemy), this->enemies.end());
-    delete del_enemy;
+    //delete del_enemy;
 
 }
 
