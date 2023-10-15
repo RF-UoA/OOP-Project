@@ -31,7 +31,7 @@ enemy_heavy::enemy_heavy() {
     this->increased_defense = (rand() % 41) - 1; //random value between 0 and 40%
 };
 
-enemy_heavy::enemy_heavy(sf::Texture texture, std::string name, float x, float y, int health, int speed) {
+enemy_heavy::enemy_heavy(sf::Texture texture, std::string name, float x, float y, int health, float speed) {
     // random values dependent on time
     srand(time(NULL));
     
@@ -56,7 +56,7 @@ void enemy_heavy::take_damage(int damage) {
     this->health = this->health - (damage - (damage * (this->increased_defense)/100));
 };
 
-int enemy_heavy::get_speed() {return this->speed;}
+float enemy_heavy::get_speed() {return this->speed;}
 
 int enemy_heavy::get_health() {return this->health;}
 

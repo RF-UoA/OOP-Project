@@ -31,7 +31,7 @@ enemy_light::enemy_light() {
     this->reduced_defense = (rand() % 81) - 1; //random value between 0 and 80
 };
 
-enemy_light::enemy_light(sf::Texture texture, std::string name, float x, float y, int health, int speed) {
+enemy_light::enemy_light(sf::Texture texture, std::string name, float x, float y, int health, float speed) {
     // random values dependent on time
     srand(time(NULL));
     
@@ -54,7 +54,7 @@ enemy_light::enemy_light(sf::Texture texture, std::string name, float x, float y
 
 void enemy_light::take_damage(int damage) {this->health = this->health - (damage * (100 + this->reduced_defense)/100);}
 
-int enemy_light::get_speed() {return this->speed;}
+float enemy_light::get_speed() {return this->speed;}
 
 int enemy_light::get_health() {return this->health;}
 

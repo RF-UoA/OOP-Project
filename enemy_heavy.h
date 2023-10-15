@@ -17,9 +17,9 @@ class enemy_heavy : public enemy {
         int increased_defense; // randomly reduced defense up to 40%
     public:
         enemy_heavy();
-        enemy_heavy(sf::Texture texture, std::string name, float x, float y, int health, int speed);
+        enemy_heavy(sf::Texture texture, std::string name, float x, float y, int health, float speed);
         void take_damage(int damage);
-        int get_speed();
+        float get_speed();
         int get_health();
         int get_speed_reduction();
         int get_increased_defense();

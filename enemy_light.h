@@ -17,9 +17,9 @@ class enemy_light : public enemy {
         int reduced_defense; // randomly reduced defense in % up to 80%
     public:
         enemy_light();
-        enemy_light(sf::Texture texture, std::string name, float x, float y, int health, int speed);
+        enemy_light(sf::Texture texture, std::string name, float x, float y, int health, float speed);
         void take_damage(int damage);
-        int get_speed();
+        float get_speed();
         int get_health();
         int get_speed_bonus();
         int get_reduced_defense();

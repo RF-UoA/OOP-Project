@@ -30,7 +30,7 @@ enemy_medium::enemy_medium() {
     this->dodge_chance = (rand() % 8) - 1; //random value between 0 and 7
 };
 
-enemy_medium::enemy_medium(sf::Texture texture, std::string name, float x, float y, int health, int speed) {
+enemy_medium::enemy_medium(sf::Texture texture, std::string name, float x, float y, int health, float speed) {
     // random values dependent on time
     srand(time(NULL));
     
@@ -63,7 +63,7 @@ void enemy_medium::take_damage(int damage) {
     }
 }
 
-int enemy_medium::get_speed() {return this->speed;}
+float enemy_medium::get_speed() {return this->speed;}
 
 int enemy_medium::get_health() {return this->health;}
 

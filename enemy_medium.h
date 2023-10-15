@@ -16,9 +16,9 @@ class enemy_medium : public enemy {
         int dodge_chance; // random chance to avoid damage (0% - 7%)
     public:
         enemy_medium();
-        enemy_medium(sf::Texture texture, std::string name, float x, float y, int health, int speed);
+        enemy_medium(sf::Texture texture, std::string name, float x, float y, int health, float speed);
         void take_damage(int damage);
-        int get_speed();
+        float get_speed();
         int get_health();
         int get_dodge_chance();
 };

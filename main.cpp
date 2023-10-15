@@ -139,6 +139,10 @@ int main() {
     if (!towerTexture.loadFromFile("images/tower.png")) {
         return 1;
     }
+    sf::Texture towerTextureRange;
+    if (!towerTextureRange.loadFromFile("images/towerRanged.png")) {
+        return 1;
+    }
 
     // Set the texture for each sprite in the grid
     for (int i = 0; i < gridSize; ++i) {
@@ -256,16 +260,18 @@ int main() {
             // randomise seed for aw value between 0 and 10
             srand(time(NULL));
             enemySelect = (rand() % 11) - 1;
+            enemySelect = 6;
 
             if (enemySelect <= 2) {
-                map.spawn_enemy(new enemy_light(enemyLight, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
-                cout << "Light" << endl;
+                map.spawn_enemy(new enemy_light(enemyLight, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
+                //cout << "Light" << endl;
             } else if (enemySelect >= 8) {
-                map.spawn_enemy(new enemy_heavy(enemyHeavy, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
-                cout << "Heavy" << endl;
+                map.spawn_enemy(new enemy_heavy(enemyHeavy, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
+                //cout << "Heavy" << endl;
             } else {
-                map.spawn_enemy(new enemy(enemyMedium, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
-                cout << "Medium" << endl;
+                map.spawn_enemy(new enemy(enemyMedium, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
+                map.spawn_enemy(new enemy_heavy(enemyHeavy, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
+                //cout << "Medium" << endl;
             }
         }
 
@@ -302,7 +308,7 @@ int main() {
                     // If square is not occupied, place the tower
                     if (empty_square == true) {
                         if (towerSelection == 1 && playerMoney >= 100) {
-                            map.add_tower(new rangedTower(towerTexture, "Tower1", click_position.x, click_position.y));
+                            map.add_tower(new rangedTower(towerTextureRange, "Tower1", click_position.x, click_position.y));
                             playerMoney -= 100;
                         } else if (towerSelection == 2 && playerMoney >= 150) {
                             map.add_tower(new AOETower(towerTexture, "Tower1", click_position.x, click_position.y));
@@ -333,6 +339,7 @@ int main() {
 
         // draw money
         window.draw(visibleMoney);
+        //window.draw(visibleScore);
 
         // draw tower selection
         if (last_input_1 == true) {

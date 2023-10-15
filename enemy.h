@@ -18,9 +18,9 @@ class enemy : public gameObject {
     
     public:
         enemy();
-        enemy(sf::Texture texture, std::string name, float x, float y, int health, int speed);
+        enemy(sf::Texture texture, std::string name, float x, float y, int health, float speed);
         virtual void take_damage(int damage);
-        int get_speed();
+        float get_speed();
         int get_health();
 
 };
