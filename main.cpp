@@ -174,9 +174,9 @@ int main() {
         }
 
         // Periodic spawning of enemies
-        // if (clock == 1000) {
-        //     map.spawn_enemy(new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
-        // }
+        if (clock == 1000) {
+            map.spawn_enemy(new enemy(enemyTexture, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2));
+        }
 
         // Enemy movement handling
         if (clock%5 == 0) {

@@ -18,7 +18,7 @@ class gameMap {
     protected:
         
         std::vector < enemy* > enemies;
-        std::vector < tower * > towers;
+        std::vector < tower* > towers;
 
     public:
         gameMap();
