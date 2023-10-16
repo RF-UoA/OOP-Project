@@ -147,7 +147,7 @@ int main() {
     int towerSelection = 1;
 
     // Currency
-    int playerMoney = 0;
+    int playerMoney = 200;
     
     // Make an integer value into a string and convert to "Text" for visual display
     // load font from file and apply it to the current currency count
@@ -273,10 +273,12 @@ int main() {
 
                     // If square is not occupied, place the tower
                     if (empty_square == true) {
-                        if (towerSelection == 1) {
+                        if (towerSelection == 1 && playerMoney >= 100) {
                             map.add_tower(new rangedTower(towerTexture, "Tower1", click_position.x, click_position.y));
-                        } else if (towerSelection == 2) {
+                            playerMoney -= 100;
+                        } else if (towerSelection == 2 && playerMoney >= 150) {
                             map.add_tower(new AOETower(towerTexture, "Tower1", click_position.x, click_position.y));
+                            playerMoney -= 150;
                         }
                     } else {
                         errorMessageCountdown = 200;
@@ -314,22 +316,50 @@ int main() {
         }
 
         // delete dead enemies
+        bool gameOver = false;
         for (int i=0; i<map.get_enemies().size(); i++) {
             if (map.get_enemies()[i]->get_object().getPosition().y > 800) {
                 map.remove_enemy(map.get_enemies()[i]);
-                //delete(map.get_enemies()[i]);
-                cout << "game over!" << endl;
+                game_over = true;
+
             } else if (map.get_enemies()[i]->get_health() <= 0) {
+                playerMoney += 100;
                 map.remove_enemy(map.get_enemies()[i]);
                 // cout << "$" << playerMoney << endl;
-                playerMoney += 10;
-                moneyDisplay = to_string(playerMoney);
-                visibleMoney.setString("$" + moneyDisplay);
+                playerMoney += 100;
+            }
+        }
+
+        // update money
+        moneyDisplay = to_string(playerMoney);
+        visibleMoney.setString("$" + moneyDisplay);
+        
+        // handle game ending
+        while (game_over == true) {
+            menuTitle.setString("Game Over!");
+            menuTitle.setPosition(180,250);
+            for (int i = 0; i < gridSize; ++i) {
+                for (int j = 0; j < gridSize; ++j) {
+                    window.draw(grid[i][j]);
+                }
+            }
+            window.draw(menuTitle);
+            window.display();
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();   
+                    return 0;   
+                } else if (event.type == sf::Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        window.close();   
+                        return 0;
+                    }
+                }
             }
         }
         
         // Attack enemies periodically
-        if (clock%333 == 0) {
+        if (clock%250 == 0) {
             if (map.get_enemies().size() > 0) {
                 firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
             }
