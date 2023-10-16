@@ -24,6 +24,7 @@ int main() {
 
     // Defining the game window
     sf::RenderWindow window(sf::VideoMode(800, 800), "Tower Defence");
+    window.setFramerateLimit(120);
 
     // Define the grid parameters
     int gridSize = 10;
@@ -134,6 +135,7 @@ int main() {
         }
     }
 
+    // used to draw lines to the enemies when attacking
     sf::Vector2f firstEnemyPosition;
     firstEnemyPosition.x = 0;
     firstEnemyPosition.y = 0;
@@ -154,23 +156,84 @@ int main() {
     string moneyDisplay = to_string(playerMoney);
     sf::Text visibleMoney;
     visibleMoney.setFont(font);
-    visibleMoney.setString(moneyDisplay);
+    visibleMoney.setString("$" + moneyDisplay);
     visibleMoney.setCharacterSize(50);
     visibleMoney.setFillColor(sf::Color::White);
     visibleMoney.setStyle(sf::Text::Bold);
     visibleMoney.setPosition(10,0);
-    //cout << moneyDisplay << endl;
+
+    sf::Text menuTitle;
+    menuTitle.setCharacterSize(70);
+    menuTitle.setFont(font);
+    menuTitle.setString("Tower Defence");
+    menuTitle.setFillColor(sf::Color::Black);
+    menuTitle.setPosition(130,100);
+
+    sf::Text menuMessage;
+    menuMessage.setCharacterSize(20);
+    menuMessage.setFont(font);
+    menuMessage.setString("\
+    Welcome to tower defence! In this minigame enemies\n\
+    will run down the map to try and breach your\n\
+    defences. Place defensive towers at strategic\n\
+    locations to defend your land! There are two types\n\
+    of tower, ranged and area attack. Press 1 and 2 on\n\
+    your keyboard to switch between the types.Each enemy\n\
+    kill will give you money which you can use to build\n\
+    more towers. Select a location on the grid to build\n\
+    a tower of your choice. Good luck!\n\n\
+    click to begin.");
+    menuMessage.setFillColor(sf::Color::Black);
+    menuMessage.setPosition(110,200);
+
+    sf::Text errorMessage;
+    errorMessage.setCharacterSize(30);
+    errorMessage.setFont(font);
+    errorMessage.setString("Square already occupied!");
+    errorMessage.setFillColor(sf::Color::White);
+    errorMessage.setPosition(200,380);
+    int errorMessageCountdown = 0;
 
     // Initialise the game clock
     int clock = 0;
 
+    // opening menu
+    bool startGame = true;
+
     // game loop
     while (window.isOpen()) {
+
+        // Draw the starting menu
+        while (startGame == true) {
+
+            window.clear();
+            for (int i = 0; i < gridSize; ++i) {
+                for (int j = 0; j < gridSize; ++j) {
+                    window.draw(grid[i][j]);
+                }
+            }
+            window.draw(menuTitle);
+            window.draw(menuMessage);
+            window.display();
+
+
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close(); 
+                    return 0;
+                } else if (event.type == sf::Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        startGame = false;
+                    }
+                }
+            } 
+        }       
 
         // Manual game clock, increases every frame
         clock++;
         if (clock > 1000) {
-            clock = 0;
+            clock = 1;
         }
 
         // Periodic spawning of enemies
@@ -216,7 +279,7 @@ int main() {
                             map.add_tower(new AOETower(towerTexture, "Tower1", click_position.x, click_position.y));
                         }
                     } else {
-                        std::cout << "square already occupied" << std::endl;
+                        errorMessageCountdown = 200;
                     }                 
                 }
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
@@ -258,12 +321,19 @@ int main() {
                 cout << "game over!" << endl;
             } else if (map.get_enemies()[i]->get_health() <= 0) {
                 map.remove_enemy(map.get_enemies()[i]);
-                //delete(map.get_enemies()[i]);
-                cout << "$" << playerMoney << endl;
+                // cout << "$" << playerMoney << endl;
                 playerMoney += 10;
                 moneyDisplay = to_string(playerMoney);
-                visibleMoney.setString(moneyDisplay);
+                visibleMoney.setString("$" + moneyDisplay);
             }
+        }
+        
+        // Attack enemies periodically
+        if (clock%333 == 0) {
+            if (map.get_enemies().size() > 0) {
+                firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
+            }
+            map.towers_attack();
         }
 
         // Draw the attacks
@@ -283,13 +353,12 @@ int main() {
 
             // Tower must be of ranged type AND actively attacking    
             } else if (map.get_towers()[i]->get_type() == 1 && map.get_towers()[i]->get_attacking() > 0) {
-                if (map.get_enemies().size() > 0) {
+                if (map.get_enemies().size() > 0 || firstEnemyPosition.x > 0) {
                     sf::Vertex line[] = {
                     sf::Vertex(map.get_towers()[i]->get_object().getPosition() + sf::Vector2f(40,40), sf::Color(0, 0, 250, map.get_towers()[i]->get_attacking())),
                     sf::Vertex(firstEnemyPosition + sf::Vector2f(20,20), sf::Color(0, 0, 250, map.get_towers()[i]->get_attacking())),
                     };
                     window.draw(line, 2, sf::Lines);
-                    // cout << map.get_enemies()[0]->get_health() << endl;
                 }
             }
 
@@ -304,15 +373,6 @@ int main() {
 
         }
 
-        // Attack enemies
-        if (clock%333 == 0) {
-            map.towers_attack();
-            if (map.get_enemies().size() > 0) {
-                firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
-            }
-        }
-
-
         // Draw the towers
         for (int i=0; i<map.get_towers().size(); i++) {
             window.draw(map.get_towers()[i]->get_object());
@@ -323,6 +383,13 @@ int main() {
             if (!map.get_enemies()[i]->get_health() <= 0) {
                 window.draw(map.get_enemies()[i]->get_object());
             }
+        }
+
+        // draw the error message
+        if (errorMessageCountdown > 0) {
+            errorMessage.setFillColor(sf::Color(250,250,250,errorMessageCountdown+50));
+            window.draw(errorMessage);
+            errorMessageCountdown--;
         }
     
         // Update the window
