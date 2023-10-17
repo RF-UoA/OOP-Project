@@ -44,6 +44,7 @@ int main() {
     bool last_input_1 = true;
     bool menu_toggle = true;
     bool game_over = false;
+    bool save = false;
 
     // define clock interval for speed up and slow down
     int clockInterval = 1000;  
@@ -226,6 +227,15 @@ int main() {
     towerCosts.setFillColor(sf::Color::Black);
     towerCosts.setStyle(sf::Text::Bold);
     towerCosts.setPosition(20,700);
+
+    // Game saved text
+    sf::Text gameSaved;
+    gameSaved.setFont(font);
+    gameSaved.setString("Game Saved");
+    gameSaved.setCharacterSize(50);
+    gameSaved.setFillColor(sf::Color::White);
+    gameSaved.setStyle(sf::Text::Regular);
+    gameSaved.setPosition(240,600);
 
     // Menu title display
     sf::Text menuTitle;
@@ -668,18 +678,21 @@ int main() {
                     } else if (menu_click_position.y >= 345 && menu_click_position.y <= 433) {
                         scoreFile.open("text/saveStorage.txt", ios::out); // write to file
                         if (scoreFile.is_open()) { // if the file is open
-
                             scoreFile << score << endl; // write test to a file
                             scoreFile.close(); // close the file
                         }
                         if (score > highscore) {
-                            highscoreFile.open("text/highscoreStorage.txt", ios::out); // append (add on)
+                            highscoreFile.open("text/highscoreStorage.txt", ios::out); // write to file
                             
                             if (highscoreFile.is_open()) { // if the file is open
                                 highscoreFile << score << endl; // write high score to a file
                                 highscoreFile.close(); // close the file
                             }
                         }
+
+                        // Inform user that the game is saved
+                        window.draw(gameSaved);
+                        window.display();
 
                     // Close the window if exit is selected    
                     } else if (menu_click_position.y >= 445 && menu_click_position.y <= 533) {
