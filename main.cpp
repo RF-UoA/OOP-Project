@@ -275,6 +275,15 @@ int main() {
     int errorMessageCountdown = 0;
     int errorText;
 
+    // Money error display
+    sf::Text errorMessageMoney;
+    int errorMessageMoneyCountdown = 0;
+    errorMessageMoney.setCharacterSize(30);
+    errorMessageMoney.setFont(font);
+    errorMessageMoney.setString("Not enough money!");
+    errorMessageMoney.setFillColor(sf::Color::White);
+    errorMessageMoney.setPosition(200,380);
+
     // Initialise the game clock
     int clock = 0;
 
@@ -397,6 +406,8 @@ int main() {
                         } else if (towerSelection == 2 && playerMoney >= 150) { // place an AOE tower
                             map.add_tower(new AOETower(towerTexture, "AOE Tower", click_position.x, click_position.y));
                             playerMoney -= 150; // decrease money
+                        } else if ((towerSelection == 1 && playerMoney < 100) || (towerSelection == 2 && playerMoney < 150)) { // not enough money
+                            errorMessageMoneyCountdown = 200;
                         }
                     } else { // if an occupied square is selected, force all towers to attack
                         if (map.get_enemies().size() > 0) {
@@ -617,6 +628,15 @@ int main() {
             errorMessage.setFillColor(sf::Color(250,250,250,errorMessageCountdown+50));
             window.draw(errorMessage);
             errorMessageCountdown--;
+        }
+
+        // Draw error message
+        errorMessageMoney.setFillColor(sf::Color(250,250,250,errorMessageMoneyCountdown+50));
+        window.draw(errorMessageMoney);
+        errorMessageMoneyCountdown--;
+
+        if (errorMessageMoneyCountdown < 0) {
+            errorMessageMoneyCountdown = 0;
         }
     
         // Update the window
