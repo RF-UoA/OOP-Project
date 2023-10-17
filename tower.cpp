@@ -54,10 +54,14 @@ tower::tower(sf::Texture texture, std::string name, float x, float y) {
 
 }
 
+// return tower's type
 int tower::get_type() {return this->type;}
 
+// return attacking period
 int tower::get_attacking() {return this->attacking;}
 
+// set attacking period
 void tower::set_attacking(int attacking) {this->attacking = attacking;}
 
+// get the range of the tower
 int tower::get_range() {return this->range;}

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <time.h>
 
+// REDUNDANT
+
 enemy_medium::enemy_medium() {
     // random values dependent on time
     srand(time(NULL));

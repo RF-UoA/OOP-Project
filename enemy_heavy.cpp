@@ -52,14 +52,19 @@ enemy_heavy::enemy_heavy(sf::Texture texture, std::string name, float x, float y
 
 };
 
+// Take damage polymorphism
 void enemy_heavy::take_damage(int damage) {
     this->health = this->health - (damage - (damage * (this->increased_defense)/100));
 };
 
+// get speed
 float enemy_heavy::get_speed() {return this->speed;}
 
+// get health
 int enemy_heavy::get_health() {return this->health;}
 
+// get speed reduction
 int enemy_heavy::get_speed_reduction() {return this->speed_reduction;} // in percentage
 
+// get increased defense 
 int enemy_heavy::get_increased_defense() {return this->increased_defense;}

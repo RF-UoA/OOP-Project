@@ -1,6 +1,8 @@
 #ifndef ENEMY_MEDIUM_H
 #define ENEMY_MEDIUM_H
 
+// REDUNDANT
+
 // General libraries
 #include <string>
 #include "gameObject.h"

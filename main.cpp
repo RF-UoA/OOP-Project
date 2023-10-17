@@ -57,13 +57,13 @@ int main() {
     if (!towerTexture1.loadFromFile("images/Tower_1.png")) {
         return 1;
     }
-    const sf::Texture *towerPointer1 = &towerTexture1;
+    const sf::Texture *towerPointer1 = &towerTexture1; // tower 1 selected
 
     sf::Texture towerTexture2;
     if (!towerTexture2.loadFromFile("images/Tower_2.png")) {
         return 1;
     }
-    const sf::Texture *towerPointer2 = &towerTexture2;
+    const sf::Texture *towerPointer2 = &towerTexture2; // tower 2 selected
 
     // Create single box for both tower selections
     sf::RectangleShape towerUI(sf::Vector2f(180, 70));    
@@ -71,26 +71,26 @@ int main() {
     towerUI.setPosition(0,730);
 
     //Create pause menu and main menu assets
-        //Transparent Backdrop
-        sf::RectangleShape transparent(sf::Vector2f(800, 800));
-        transparent.setFillColor(sf::Color(0,0,0,128));
-        transparent.setPosition(0,0);
+    //Transparent Backdrop
+    sf::RectangleShape transparent(sf::Vector2f(800, 800));
+    transparent.setFillColor(sf::Color(0,0,0,128));
+    transparent.setPosition(0,0);
 
-        // Load texture for pause menu
-        sf::Texture pauseTexture;
-        if (!pauseTexture.loadFromFile("images/Pause.jpg")) {
-            return 1;
-        }
-        // create a pointer to the texture
-        const sf::Texture *pausePointer = &pauseTexture;
-        // make the pause menu shape
-        sf::RectangleShape backdrop(sf::Vector2f(800/2.6, 800/2));
-        backdrop.setFillColor(sf::Color::White);
-        backdrop.setPosition((800/2) - (800/2.6)/2, 800/4);
-        // access texture pointer annd apply it to the shape
-        backdrop.setTexture(pausePointer);
+    // Load texture for pause menu
+    sf::Texture pauseTexture;
+    if (!pauseTexture.loadFromFile("images/Pause.jpg")) {
+        return 1;
+    }
+    // create a pointer to the texture
+    const sf::Texture *pausePointer = &pauseTexture;
+    // make the pause menu shape
+    sf::RectangleShape backdrop(sf::Vector2f(800/2.6, 800/2));
+    backdrop.setFillColor(sf::Color::White);
+    backdrop.setPosition((800/2) - (800/2.6)/2, 800/4);
+    // access texture pointer annd apply it to the shape
+    backdrop.setTexture(pausePointer);
 
-    // Speed up
+    // Speed up visualisation
     sf::Texture forwardTexture;
     if (!forwardTexture.loadFromFile("images/fastForward.png")) {
         return 1;
@@ -116,19 +116,24 @@ int main() {
         return 1;
     }
 
-    // Load texture for sub-class enemies
+    // Load texture for light enemies
     sf::Texture enemyLight;
     if (!enemyLight.loadFromFile("images/enemyLight.png")) {
         return 1;
     }
+
+    // Load texture for regular enemies
     sf::Texture enemyMedium;
     if (!enemyMedium.loadFromFile("images/enemyMedium.png")) {
         return 1;
     }
+
+    // Load texture for heavy enemies
     sf::Texture enemyHeavy;
     if (!enemyHeavy.loadFromFile("images/enemyHeavy.png")) {
         return 1;
     }
+    
     // Load texture for towers
     sf::Texture towerTexture;
     if (!towerTexture.loadFromFile("images/tower.png")) {
@@ -148,7 +153,7 @@ int main() {
         }
     }
 
-    // used to draw lines to the enemies when attacking
+    // initialise enemy variable, used to draw lines to the enemies when attacking
     sf::Vector2f firstEnemyPosition;
     firstEnemyPosition.x = 0;
     firstEnemyPosition.y = 0;
@@ -164,6 +169,9 @@ int main() {
     int score = 0;
     int highscore = 0;
 
+    // Currency variable
+    int playerMoney = 200;
+
     // reading save file
     fstream scoreFile;
     fstream highscoreFile;
@@ -171,18 +179,16 @@ int main() {
     if (highscoreFile.is_open()) { // if the file is open
         string readHighscore;
         while (getline(highscoreFile, readHighscore)) {
-            highscore = stoi(readHighscore);
+            highscore = stoi(readHighscore); // set the highscore from file
         }
         highscoreFile.close();
     }
-
-    // Currency
-    int playerMoney = 200;
     
-    // Make an integer value into a string and convert to "Text" for visual display
-    // load font from file and apply it to the current currency count
+    // Define a font object from file
     sf::Font font;
     font.loadFromFile("font/OpenSans-Bold.ttf");
+
+    // Money display
     string moneyDisplay = to_string(playerMoney);
     sf::Text visibleMoney;
     visibleMoney.setFont(font);
@@ -192,7 +198,7 @@ int main() {
     visibleMoney.setStyle(sf::Text::Bold);
     visibleMoney.setPosition(10,50);
 
-    //Score Display
+    // Score Display
     string scoreDisplay = to_string(score);
     sf::Text visibleScore;
     visibleScore.setFont(font);
@@ -223,7 +229,7 @@ int main() {
     towerCosts.setStyle(sf::Text::Bold);
     towerCosts.setPosition(20,700);
 
-
+    // Menu title display
     sf::Text menuTitle;
     menuTitle.setCharacterSize(70);
     menuTitle.setFont(font);
@@ -231,6 +237,7 @@ int main() {
     menuTitle.setFillColor(sf::Color::Black);
     menuTitle.setPosition(130,100);
 
+    // Menu message display
     sf::Text menuMessage;
     menuMessage.setCharacterSize(20);
     menuMessage.setFont(font);
@@ -250,6 +257,7 @@ int main() {
     menuMessage.setFillColor(sf::Color::Black);
     menuMessage.setPosition(110,200);
 
+    // Error message display
     sf::Text errorMessage;
     errorMessage.setCharacterSize(30);
     errorMessage.setFont(font);
@@ -262,7 +270,7 @@ int main() {
     // Initialise the game clock
     int clock = 0;
 
-    // opening menu
+    // opening menu variable
     bool startGame = true;
 
     // game loop
@@ -271,25 +279,30 @@ int main() {
         // Draw the starting menu
         while (startGame == true) {
 
+            // Clear the screen
             window.clear();
+
+            // Draw the background grid
             for (int i = 0; i < gridSize; ++i) {
                 for (int j = 0; j < gridSize; ++j) {
                     window.draw(grid[i][j]);
                 }
             }
+
+            // Draw the menu
             window.draw(menuTitle);
             window.draw(menuMessage);
             window.display();
 
-
+            // check for game events
             sf::Event event;
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
-                    window.close(); 
+                    window.close(); // end the program if window is closed
                     return 0;
                 } else if (event.type == sf::Event::MouseButtonPressed) {
                     if (event.mouseButton.button == sf::Mouse::Left) {
-                        startGame = false;
+                        startGame = false; // start the game if the mouse is clicked
                     }
                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
                     scoreFile.open("text/saveStorage.txt", ios::in); // read
@@ -306,6 +319,7 @@ int main() {
             } 
         }
 
+        // Speed up the game if 'F' is pressed
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
             clockInterval = 500;
             attackPeriod = 125;
@@ -316,7 +330,7 @@ int main() {
             movePeriod = 4;
         }
         
-        // Manual game clock, increases every frame
+        // Manual game clock, increases every frame used for game events
         clock++;
         if (clock > clockInterval) {
             clock = 1;
@@ -326,18 +340,14 @@ int main() {
         if (clock == clockInterval) {
             // randomise seed for aw value between 0 and 10
             srand(time(NULL));
-            enemySelect = (rand() % 11) - 1;
-            enemySelect = 6;
+            enemySelect = (rand() % 11) - 1; // RNG for enemy spawning
 
-            if (enemySelect <= 2) {
-                map.spawn_enemy(new enemy_light(enemyLight, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
-                //cout << "Light" << endl;
-            } else if (enemySelect >= 8) {
-                map.spawn_enemy(new enemy_heavy(enemyHeavy, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
-                //cout << "Heavy" << endl;
-            } else {
-                map.spawn_enemy(new enemy(enemyMedium, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10, 2.f));
-                //cout << "Medium" << endl;
+            if (enemySelect <= 2) { // spawn a light enemy
+                map.spawn_enemy(new enemy_light(enemyLight, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10 + 0.1 * score, 2.f));
+            } else if (enemySelect >= 8) { // spawn a heavy enemy
+                map.spawn_enemy(new enemy_heavy(enemyHeavy, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10 + 0.1 * score, 2.f));
+            } else { // spawn a regular enemy
+                map.spawn_enemy(new enemy(enemyMedium, "enemy1", rand()%(int(cellSize*gridSize)), -100, 10 + 0.1 * score, 2.f));
             }
         }
 
@@ -348,12 +358,12 @@ int main() {
             }
         }
 
-        sf::Event event;
+        sf::Event event; // variable for SFML events such as keypresses
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window.close();    
+                window.close(); // end program if window is closed   
 
-            // Query for mouse click    
+            // Query for mouse click to place towers   
             } else if (event.type == sf::Event::MouseButtonPressed) {
                 
                 if (event.mouseButton.button == sf::Mouse::Left) {
@@ -373,33 +383,35 @@ int main() {
 
                     // If square is not occupied, place the tower
                     if (empty_square == true) {
-                        if (towerSelection == 1 && playerMoney >= 100) {
-                            map.add_tower(new rangedTower(towerTextureRange, "Tower1", click_position.x, click_position.y));
-                            playerMoney -= 100;
-                        } else if (towerSelection == 2 && playerMoney >= 150) {
-                            map.add_tower(new AOETower(towerTexture, "Tower1", click_position.x, click_position.y));
-                            playerMoney -= 150;
+                        if (towerSelection == 1 && playerMoney >= 100) { // place a ranged tower
+                            map.add_tower(new rangedTower(towerTextureRange, "Ranged Tower", click_position.x, click_position.y));
+                            playerMoney -= 100; // decrease money
+                        } else if (towerSelection == 2 && playerMoney >= 150) { // place an AOE tower
+                            map.add_tower(new AOETower(towerTexture, "AOE Tower", click_position.x, click_position.y));
+                            playerMoney -= 150; // decrease money
                         }
-                    } else {
+                    } else { // if an occupied square is selected, force all towers to attack
                         if (map.get_enemies().size() > 0) {
-                            firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
+                            firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition(); // get the position of first enemy for visuals
                         }
-                        map.towers_attack();
+                        map.towers_attack(); // all towers attack
                         srand(time(NULL));
-                        errorText = rand() % 10;
+                        errorText = rand() % 10; // set error message for drawing
                         errorMessageCountdown = 200;
                     }                 
                 }
+
+            // logic for changing tower selection    
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-                towerSelection = 1;
+                towerSelection = 1; // ranged tower selection
                 last_input_1 = true;
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
-                towerSelection = 2;
+                towerSelection = 2; // AOE tower selection
                 last_input_1 = false;
             }
         }
 
-        // Clear the window
+        // Clear the window before drawing any objects
         window.clear(sf::Color::White);
 
         // Draw the ground grid
@@ -409,7 +421,7 @@ int main() {
             }
         }
 
-        // draw money
+        // draw on-screen GUI
         window.draw(visibleMoney);
         window.draw(visibleScore);
         window.draw(visibleHighscore);
@@ -425,28 +437,29 @@ int main() {
         }
 
         // delete dead enemies
-        bool gameOver = false;
+        bool gameOver = false; // variable for determining if the game is over
         for (int i=0; i<map.get_enemies().size(); i++) {
             if (map.get_enemies()[i]->get_object().getPosition().y > 800) {
                 map.remove_enemy(map.get_enemies()[i]);
-                game_over = true;
+                game_over = true; // end game if enemy reaches the bottom of the screen
 
             } else if (map.get_enemies()[i]->get_health() <= 0) {
                 playerMoney += 100;
-                map.remove_enemy(map.get_enemies()[i]);
-                // cout << "$" << playerMoney << endl;
+                map.remove_enemy(map.get_enemies()[i]); // remove enemy if killed by tower
                 playerMoney += 100;
                 score += 100;
             }
         }
 
-        // update money
+        // update money every frame
         moneyDisplay = to_string(playerMoney);
         visibleMoney.setString("$" + moneyDisplay);
-        // update score
+
+        // update score every frame
         scoreDisplay = to_string(score);
         visibleScore.setString("Score: " + scoreDisplay);
-        // update highscore
+
+        // update highscore every frame
         if (score > highscore) {
             highscoreDisplay = to_string(score);
             visibleHighscore.setString("Highscore: " + highscoreDisplay);
@@ -459,6 +472,8 @@ int main() {
         
         // handle game ending
         while (game_over == true) {
+
+            // draw window objects
             menuTitle.setString("Game Over!");
             menuTitle.setPosition(180,250);
             for (int i = 0; i < gridSize; ++i) {
@@ -470,7 +485,6 @@ int main() {
             window.display();
 
             // if the score is higher than the highest, rewrite the highscore
-            cout << score << " " << highscore << endl;
             if (score > highscore) {
                 highscoreFile.open("text/highscoreStorage.txt", ios::out); // append (add on)
                 if (highscoreFile.is_open()) { // if the file is open
@@ -479,6 +493,7 @@ int main() {
                 }
             }
 
+            // poll for events and close window
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
                     window.close();   
@@ -494,6 +509,8 @@ int main() {
         
         // Attack enemies periodically
         if (clock % attackPeriod == 0) {
+
+            // update the position of the first enemy only when an attack begins
             if (map.get_enemies().size() > 0) {
                 firstEnemyPosition = map.get_enemies()[0]->get_object().getPosition();
             }
@@ -549,8 +566,9 @@ int main() {
             }
         }
 
-        // draw the error message
+        // draw a random 'error' message when the user selects an occupied grid
         if (errorMessageCountdown > 0) {
+            
             // select a random message every second
             switch (errorText) {
                 case 1: 
@@ -586,6 +604,8 @@ int main() {
                 default:
                     break;
             }
+            
+            // draw the writing to the window
             errorMessage.setFillColor(sf::Color(250,250,250,errorMessageCountdown+50));
             window.draw(errorMessage);
             errorMessageCountdown--;
@@ -594,25 +614,24 @@ int main() {
         // Update the window
         window.display();
 
+        // Handle escape keypress for pause menu
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && (pause == false)) {
-                //std::cout << "Paused" << std::endl;
-                // draw objects to the window
-                window.draw(transparent);
-                window.draw(backdrop);
-                //window.draw(resume);
-                window.display();
-                // pause the game
-                pause = true;
-                lock_input = true;
+            window.draw(transparent);
+            window.draw(backdrop);
+            window.display();
+            pause = true;
+            lock_input = true;
         }
         
+        // pause menu event loop
         while (pause == true) {
+            
             // Poll for events, resets inputs so they aren't retroactively registered
             while (window.pollEvent(event)) {}
+            
             // lock the input to prevent multiple clicks
             while (lock_input == true) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) == false && lock_input == true) {
-                    //cout << "1" << endl;
                     lock_input = false;
                 }
             }
@@ -623,46 +642,50 @@ int main() {
                 return 0; 
             }
 
-            // If the user presses escape
+            // If the user presses escape show the pause menu
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && (pause == true)) {
                 // lock the input until they release escape
                 lock_input = true;
+                
+                // error handling to stop escape being held
                 while (lock_input == true) {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) == false && lock_input == true) {
                     // unlock input
                     lock_input = false;
                     }
                 }
-                    // std::cout << "UnPaused" << std::endl;
                     // Set pause to false
                     pause = false;
             }
 
             // check if user presses a menu button and output accordingly
             sf::Vector2i menu_click_position = sf::Mouse::getPosition(window);
-            // cout << menu_click_position.x << "    ";
-            // cout << menu_click_position.y << endl;
-            if(event.type == sf::Event::MouseButtonPressed) {
-                if (menu_click_position.x >= 282 && menu_click_position.x <= 517) {
-                    if (menu_click_position.y >= 245 && menu_click_position.y <= 333) {
+            
+            if(event.type == sf::Event::MouseButtonPressed) { // check for mouse click
+                if (menu_click_position.x >= 282 && menu_click_position.x <= 517) {  // pause menu coordinates
+                    if (menu_click_position.y >= 245 && menu_click_position.y <= 333) { // pause menu coordinates
                         pause = false;
+
+                    // Write the high-score to a file if selected
                     } else if (menu_click_position.y >= 345 && menu_click_position.y <= 433) {
-                        scoreFile.open("text/saveStorage.txt", ios::out); // write
+                        scoreFile.open("text/saveStorage.txt", ios::out); // write to file
                         if (scoreFile.is_open()) { // if the file is open
+
                             scoreFile << score << endl; // write test to a file
                             scoreFile.close(); // close the file
                         }
                         if (score > highscore) {
                             highscoreFile.open("text/highscoreStorage.txt", ios::out); // append (add on)
+                            
                             if (highscoreFile.is_open()) { // if the file is open
-                                highscoreFile << score << endl; // write test to a file
+                                highscoreFile << score << endl; // write high score to a file
                                 highscoreFile.close(); // close the file
                             }
                         }
-                        // TELL THE USER THE GAME IS SAVED
-                        //cout << "Save" << endl;
+
+                    // Close the window if exit is selected    
                     } else if (menu_click_position.y >= 445 && menu_click_position.y <= 533) {
-                        //cout << "close" << endl;
+                        // end the game
                         window.close();   
                         return 0; 
                     }

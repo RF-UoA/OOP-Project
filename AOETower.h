@@ -14,9 +14,9 @@
 
 class AOETower : public tower {
     public:
-        AOETower();
-        AOETower(sf::Texture texture, std::string name, float x, float y);
-        void attack(std::vector < enemy* > enemies);
+        AOETower(); // default constructor
+        AOETower(sf::Texture texture, std::string name, float x, float y); // regular constructor
+        void attack(std::vector < enemy* > enemies); // attack enemies
 
 };
 

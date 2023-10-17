@@ -16,13 +16,13 @@ class enemy_heavy : public enemy {
         int speed_reduction; // set reduced speed up to 20%
         int increased_defense; // randomly reduced defense up to 40%
     public:
-        enemy_heavy();
-        enemy_heavy(sf::Texture texture, std::string name, float x, float y, int health, float speed);
-        void take_damage(int damage);
-        float get_speed();
-        int get_health();
-        int get_speed_reduction();
-        int get_increased_defense();
+        enemy_heavy(); // default constructor 
+        enemy_heavy(sf::Texture texture, std::string name, float x, float y, int health, float speed); // regular constructor
+        void take_damage(int damage); // take damage
+        float get_speed(); // get enemy speed
+        int get_health(); // get enemy health
+        int get_speed_reduction(); // get speed reduction
+        int get_increased_defense(); // get increased defense
 };
 
 #endif

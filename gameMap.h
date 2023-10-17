@@ -14,22 +14,20 @@
 #include <iostream>
 
 class gameMap {
-
     protected:
         
-        std::vector < enemy* > enemies;
-        std::vector < tower* > towers;
+        std::vector < enemy* > enemies; // encapsulates enemies
+        std::vector < tower* > towers; // encapsulates towers
 
     public:
-        gameMap();
-        void add_tower(tower* tower);
-        void spawn_enemy(enemy* enemy);
-        void remove_enemy(enemy* enemy);
-        void towers_attack();
-        void move_enemies();
-        std::vector < enemy* > get_enemies();
-        std::vector < tower* > get_towers();
-        ~gameMap();
+        gameMap(); // default constructor
+        void add_tower(tower* tower); // add a tower to the game
+        void spawn_enemy(enemy* enemy); // add an enemy to the game
+        void remove_enemy(enemy* enemy); // remove a dead enemy
+        void towers_attack(); // get all towers on the map to attack
+        std::vector < enemy* > get_enemies(); // get the enemies vector
+        std::vector < tower* > get_towers(); // get the towers vector
+        ~gameMap(); // destructor
 
 };
 

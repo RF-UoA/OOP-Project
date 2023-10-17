@@ -2,10 +2,13 @@
 #include <cmath>
 #include "rangedTower.h"
 
+// default constructor
 rangedTower::rangedTower() : tower() {this->type = 1;}
 
+// regular constructor
 rangedTower::rangedTower(sf::Texture texture, std::string name, float x, float y) : tower(texture, name, x, y) {this->type = 1;}
 
+// attack enemies
 void rangedTower::attack(std::vector < enemy* > enemies) {
 
     // Attacks the closest enemy

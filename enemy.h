@@ -13,15 +13,15 @@
 
 class enemy : public gameObject {
     protected:
-        int health;
-        float speed;
+        int health; // enemy's health
+        float speed; // enemy's speed
     
     public:
-        enemy();
-        enemy(sf::Texture texture, std::string name, float x, float y, int health, float speed);
-        virtual void take_damage(int damage);
-        float get_speed();
-        int get_health();
+        enemy(); // default constructor
+        enemy(sf::Texture texture, std::string name, float x, float y, int health, float speed); // regular constructor
+        virtual void take_damage(int damage); // take damage (when an enemy is attacked)
+        float get_speed(); // get the enemy's speed
+        int get_health(); // get the enemy's health
 
 };
 

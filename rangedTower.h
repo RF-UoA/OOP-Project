@@ -14,9 +14,9 @@
 
 class rangedTower : public tower {
     public:
-        rangedTower();
-        rangedTower(sf::Texture texture, std::string name, float x, float y);
-        void attack(std::vector < enemy* > enemies);
+        rangedTower(); // default constructor
+        rangedTower(sf::Texture texture, std::string name, float x, float y); // regular constructor
+        void attack(std::vector < enemy* > enemies); // attack function
 
 };
 

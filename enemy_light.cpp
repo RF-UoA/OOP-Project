@@ -3,6 +3,7 @@
 #include <iostream>
 #include <time.h>
 
+// default constructor 
 enemy_light::enemy_light() {
     // random values dependent on time
     srand(time(NULL));
@@ -31,6 +32,7 @@ enemy_light::enemy_light() {
     this->reduced_defense = (rand() % 81) - 1; //random value between 0 and 80
 };
 
+// regular constructor 
 enemy_light::enemy_light(sf::Texture texture, std::string name, float x, float y, int health, float speed) {
     // random values dependent on time
     srand(time(NULL));
@@ -52,12 +54,17 @@ enemy_light::enemy_light(sf::Texture texture, std::string name, float x, float y
 
 };
 
+// enemy take damage
 void enemy_light::take_damage(int damage) {this->health = this->health - (damage * (100 + this->reduced_defense)/100);}
 
+// get speed
 float enemy_light::get_speed() {return this->speed;}
 
+// get health
 int enemy_light::get_health() {return this->health;}
 
+// get speed bonus
 int enemy_light::get_speed_bonus() {return this->speed_bonus;} // in percentage
 
+// get reduced defense
 int enemy_light::get_reduced_defense() {return this->reduced_defense;}

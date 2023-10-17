@@ -11,19 +11,19 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
-class tower : public gameObject {
+class tower : public gameObject { // abstract class
     protected:
-        int type;
-        int attacking;
-        int range;
+        int type; // type of tower
+        int attacking; // attacking period for physically drawing attacks
+        int range; // range of tower
     public:
-        tower();
-        tower(sf::Texture texture, std::string name, float x, float y);
-        virtual void attack(std::vector < enemy* > enemies) = 0;
-        int get_type();
-        int get_attacking();
-        int get_range();
-        void set_attacking(int attacking);
+        tower(); // default constructor
+        tower(sf::Texture texture, std::string name, float x, float y); // regular constructor
+        virtual void attack(std::vector < enemy* > enemies) = 0; // PURE virtual function, attack enemies
+        int get_type(); // get type of tower
+        int get_attacking(); // get attacking period
+        int get_range(); // get tower range
+        void set_attacking(int attacking); // set attacking period
 
 };
 

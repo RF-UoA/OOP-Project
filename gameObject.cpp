@@ -24,7 +24,7 @@ gameObject::gameObject() {
 
 }
 
-// Constructor
+// regular constructor
 gameObject::gameObject(sf::Texture texture, std::string name, float x, float y) {
     
     // initialise attributes for constructor
@@ -49,10 +49,13 @@ gameObject::gameObject(sf::Texture texture, std::string name, float x, float y) 
 
 }
 
-sf::Vector2f gameObject::get_pos() {return this->pos;}
+// returns the position of the object's sprite
+sf::Vector2f gameObject::get_pos() {return this->object.getPosition();}
 
+// set the position of the object and update pos variable
 void gameObject::set_pos(sf::Vector2f pos) {this->pos = pos; this->object.setPosition(this->pos);}
 
+// set the texture of the object's sprite
 void gameObject::set_texture(sf::Texture texture) {
 
     this->texture = texture;
@@ -60,10 +63,14 @@ void gameObject::set_texture(sf::Texture texture) {
 
 }
 
+// set the object's name
 void gameObject::set_name(std::string name) {this->name = name;}
 
+// return the object's name
 std::string gameObject::get_name() {return this->name;}
 
+// get the sprite of the object
 sf::Sprite gameObject::get_object() {return this->object;}
 
+// move the object's sprite
 void gameObject::moveObject(sf::Vector2f movement) {this->object.move(movement);}

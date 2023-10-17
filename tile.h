@@ -4,13 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "gameObject.h"
 
-// class tile : public gameObject {
-//     protected:
-//         bool path;
-//     public:
-//         tile();
-//         tile(sf::Texture texture, std::string name, float x, float y, bool path);
-// };
+// This file is redundant
 
 class tile {
     public:
