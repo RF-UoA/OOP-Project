@@ -4,7 +4,6 @@
 #include "gameObject.h"
 #include "tower.h"
 #include "enemy.h"
-#include "tile.h"
 #include <vector>
 
 // SFML modules and libraries

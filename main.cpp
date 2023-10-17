@@ -20,9 +20,7 @@
 #include "rangedTower.h"
 #include "AOETower.h"
 #include "enemy.h"
-#include "tile.h"
 #include "enemy_light.h"
-#include "enemy_medium.h"
 #include "enemy_heavy.h"
 
 using namespace std;
